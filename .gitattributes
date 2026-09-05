@@ -1,0 +1,6 @@
+# Единые окончания строк: markdown/python — LF, PowerShell — CRLF.
+# Иначе пакетная правка на другой ОС переписывает файл целиком и diff становится нечитаемым.
+* text=auto eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.ps1 text eol=crlf

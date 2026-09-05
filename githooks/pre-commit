@@ -1,0 +1,30 @@
+#!/bin/sh
+# Линтер определений агентов — блокирует коммит карточки, которую агент не сможет исполнить.
+# Введён 2026-08-21. Живёт в версионируемом /githooks/, подключается через core.hooksPath —
+# .git/hooks не уезжает в мост, и на сервере защиты бы не было.
+#
+# Ловит: обязанность без инструмента, битый путь, отсутствие валидации входа или DoD,
+# рассогласование статусов. Это молчаливые дефекты: агент не падает, а уверенно врёт.
+# Обойти осознанно: git commit --no-verify
+
+changed=$(git diff --cached --name-only --diff-filter=ACM \
+          | grep -E '^agents/.*\.md$' | grep -v '\.bak')
+[ -z "$changed" ] && exit 0
+
+# На ноуте Windows это py -3, на сервере Linux — python3. Без фолбэка хук молча
+# не запускался бы на одной из двух машин, создавая иллюзию защиты.
+if command -v py >/dev/null 2>&1; then PY="py -3"
+elif command -v python3 >/dev/null 2>&1; then PY="python3"
+else
+  echo "agent-lint: python не найден — проверка ПРОПУЩЕНА (это не 'чисто')"
+  exit 0
+fi
+
+echo "agent-lint: проверяю карточки агентов..."
+$PY "$HOME/.claude/tools/agent-lint.py" --quiet || {
+  echo ""
+  echo "agent-lint: коммит остановлен. Почини ОШИБКИ выше либо --no-verify осознанно."
+  exit 1
+}
+echo "agent-lint: чисто"
+exit 0

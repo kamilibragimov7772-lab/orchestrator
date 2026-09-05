@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="fonts.css">
+<style>
+  :root{
+    --dark:#17130f; --panel:#221b14; --panel2:#2b2119;
+    --cream:#f2ede4; --creamink:#1a1410;
+    --accent:#c05a3a; --accent2:#e0906a;
+    --muteD:#7d746b; --muteC:#a89a89;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:720px;height:1280px;overflow:hidden;}
+  body{
+    font-family:"Montserrat","Manrope","Segoe UI",Arial,sans-serif;
+    background:var(--dark); color:#fff;
+    -webkit-font-smoothing:antialiased; text-rendering:geometricPrecision;
+  }
+  #stage{position:relative;width:720px;height:1280px;}
+  .scene{position:absolute;inset:0;display:none;padding:72px 56px;}
+  .scene.on{display:block;}
+  .label{
+    font-size:15px;font-weight:800;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--muteD);text-align:center;
+  }
+  .big{font-weight:900;letter-spacing:-.02em;line-height:.98;}
+  .accent{color:var(--accent);}
+  .word{display:inline-block;will-change:transform,opacity,filter;}
+  .center{position:absolute;left:56px;right:56px;text-align:center;}
+
+  /* pixel mascot */
+  .mascot{display:block;margin:0 auto;}
+  .pix{shape-rendering:crispEdges;}
+
+  /* cards */
+  .card{
+    background:#efe9df;border-radius:22px;padding:26px 28px;color:#20180f;
+    box-shadow:0 24px 60px rgba(0,0,0,.28);
+  }
+  .chip{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:19px;font-weight:800;color:var(--creamink);
+  }
+  .chip .n{
+    width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;
+  }
+  .pill{
+    display:inline-block;background:var(--accent);color:#fff;font-weight:800;font-size:23px;
+    padding:20px 34px;border-radius:40px;box-shadow:0 16px 40px rgba(192,90,58,.45);
+  }
+  .bar{height:8px;border-radius:6px;background:#d9d1c4;overflow:hidden;}
+  .bar > i{display:block;height:100%;background:var(--accent);}
+</style>
+</head>
+<body>
+<div id="stage">
+<!-- Тексты сцен — заглушки: «Ваш оффер здесь». Правь копию под свой оффер; тайминг сцен — в scenes[] ниже. -->
+
+  <!-- S1 hook -->
+  <section class="scene" id="s1">
+    <div class="label" id="s1lab">ВАШ · БРЕНД · ЗДЕСЬ</div>
+    <div class="center" id="s1card" style="top:150px;">
+      <div class="card" style="text-align:left;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:52px;height:52px;border-radius:14px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:#fff;">C</div>
+          <div>
+            <div style="font-weight:900;font-size:22px;color:#20180f;">Ваш продукт</div>
+            <div style="font-size:15px;color:#8a7f70;font-weight:700;">1 240 клиентов</div>
+          </div>
+        </div>
+        <div style="margin-top:22px;display:flex;flex-direction:column;gap:12px;">
+          <div class="bar"><i id="s1b1" style="width:0"></i></div>
+          <div class="bar"><i id="s1b2" style="width:0"></i></div>
+        </div>
+        <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="color:#b7ac9c;font-weight:800;">···</span>
+          <span class="accent" id="s1days" style="font-weight:900;font-size:15px;letter-spacing:.12em;">БОЛЬ КЛИЕНТА ЗДЕСЬ</span>
+        </div>
+      </div>
+    </div>
+    <div class="center big" id="s1hook" style="top:640px;font-size:78px;">
+      <span class="word">Ваш</span> <span class="word">оффер</span> <span class="word accent">здесь —</span>
+    </div>
+  </section>
+
+  <!-- S2 stacked words -->
+  <section class="scene" id="s2">
+    <div class="label" id="s2lab">ТЕЗИС · ЗА · ТЕЗИСОМ</div>
+    <div class="center big" id="s2stack" style="top:210px;font-size:82px;text-align:left;">
+      <div class="word" style="color:#4a4238">ТЕЗИС 1.</div>
+      <div class="word accent" style="margin-top:6px">ТЕЗИС 2.</div>
+      <div class="word" style="color:#8f8578;margin-top:6px">ТЕЗИС 3.</div>
+    </div>
+    <div class="center big" id="s2sub" style="top:880px;font-size:54px;text-align:left;line-height:1.05;">
+      <span class="word">Подзаголовок оффера</span><br>
+      <span class="word">в&nbsp;</span><span class="word accent">две</span> <span class="word">строки</span> <span class="word">с акцентом.</span>
+    </div>
+  </section>
+
+  <!-- S3 brand reveal (cream) -->
+  <section class="scene" id="s3">
+    <div class="label" id="s3lab" style="color:var(--muteC)">ЗНАКОМЬТЕСЬ</div>
+    <div class="center big" id="s3logo" style="top:210px;font-size:150px;color:var(--creamink);">
+      <span class="word">БРЕНД</span><span class="word accent">.</span>
+    </div>
+    <div id="s3mascotWrap" class="center" style="top:470px;">
+      <svg id="s3mascot" class="mascot pix" width="150" height="130" viewBox="0 0 15 13"></svg>
+    </div>
+    <div class="center big" id="s3sub" style="top:740px;font-size:44px;color:var(--creamink);line-height:1.12;">
+      <span class="word">Одна фраза</span><br><span class="word">о том, что</span><br><span class="word">вы&nbsp;</span><span class="word accent">делаете</span>
+    </div>
+  </section>
+
+  <!-- S4 how it works (cream) -->
+  <section class="scene" id="s4">
+    <div class="label" id="s4lab" style="color:var(--muteC)">КАК ЭТО РАБОТАЕТ</div>
+    <div class="center" id="s4chips" style="top:130px;display:flex;justify-content:space-between;">
+      <span class="chip word"><span class="n">1</span> шаг один</span>
+      <span class="chip word"><span class="n">2</span> шаг два</span>
+      <span class="chip word"><span class="n">3</span> шаг три</span>
+    </div>
+    <div class="center" id="s4card" style="top:250px;">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:11px;background:#20180f;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;">C</div>
+            <div>
+              <div style="font-weight:900;font-size:19px;color:#20180f;">Бренд</div>
+              <div style="font-size:14px;color:#8a7f70;font-weight:700;">статус · подпись</div>
+            </div>
+          </div>
+          <span style="border:1.5px solid var(--accent);color:var(--accent);font-weight:800;font-size:13px;padding:6px 12px;border-radius:20px;">● СТАТУС</span>
+        </div>
+        <div style="margin-top:22px;font-weight:900;font-size:26px;color:#20180f;line-height:1.15;">Заголовок карточки под ваш оффер</div>
+        <div style="margin-top:12px;font-size:17px;color:#6f6557;font-weight:600;line-height:1.35;">Описание в одну-две строки: что получает клиент и почему это важно.</div>
+      </div>
+    </div>
+    <div class="center big" id="s4tag" style="top:1000px;font-size:52px;color:var(--creamink);text-align:left;">
+      <span class="word">Выгода&nbsp;</span><span class="word accent">одной фразой.</span>
+    </div>
+  </section>
+
+  <!-- S5 meta punchline + render panel (dark) -->
+  <section class="scene" id="s5">
+    <div class="label" id="s5lab">● ЗАПИСЬ · БРЕНД</div>
+    <div class="center big" id="s5head" style="top:120px;font-size:60px;line-height:1.06;">
+      <span class="word">Ключевой</span><br><span class="word">тезис в</span><br><span class="word">три&nbsp;</span><span class="word accent">строки.</span>
+    </div>
+    <div class="center" id="s5panel" style="top:560px;">
+      <div style="background:var(--panel);border-radius:22px;padding:26px 24px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800;letter-spacing:.14em;color:#9a8f80;">
+          <span>БРЕНД · ПОДПИСЬ ПАНЕЛИ</span><span class="accent">✓ ГОТОВО</span>
+        </div>
+        <div id="s5wave" style="margin-top:26px;display:flex;align-items:flex-end;gap:6px;height:120px;"></div>
+      </div>
+    </div>
+    <div class="center" id="s5mascotWrap" style="top:980px;">
+      <svg id="s5mascot" class="mascot pix" width="120" height="104" viewBox="0 0 15 13"></svg>
+    </div>
+  </section>
+
+  <!-- S6 outro CTA (dark) -->
+  <section class="scene" id="s6">
+    <div class="center big" id="s6logo" style="top:230px;font-size:150px;">
+      <span class="word">БРЕНД</span><span class="word accent">.</span>
+    </div>
+    <div class="center" id="s6mascotWrap" style="top:470px;">
+      <svg id="s6mascot" class="mascot pix" width="130" height="112" viewBox="0 0 15 13"></svg>
+    </div>
+    <div class="center big" id="s6sub" style="top:700px;font-size:46px;line-height:1.1;">
+      <span class="word">Призыв к действию</span><br><span class="word">одной&nbsp;</span><span class="word accent">фразой.</span>
+    </div>
+    <div class="center" id="s6cta" style="top:930px;">
+      <span class="pill word">Ваш CTA →</span>
+    </div>
+    <div class="center label word" id="s6url" style="top:1080px;letter-spacing:.32em;">ВАШ · САЙТ</div>
+  </section>
+
+</div>
+
+<script>
+// ---------- pixel mascot ----------
+function buildMascot(svg){
+  // 15x13 grid rust blob with eyes + teeth (echoes reference monster)
+  const A="#c05a3a", D="#17130f", W="#f2ede4";
+  const rows=[
+    "...XXXXXXXXX...",
+    "..XXXXXXXXXXX..",
+    ".XXXXXXXXXXXXX.",
+    "XXXXXXXXXXXXXXX",
+    "XXDDXXXXXXXDDXX",
+    "XXDDXXXXXXXDDXX",
+    "XXXXXXXXXXXXXXX",
+    "XXXXXXXXXXXXXXX",
+    "XWXWXWXWXWXWXWX",
+    "XWXWXWXWXWXWXWX",
+    ".XXXXXXXXXXXXX.",
+    "..X.X.X.X.X.X..",
+    "..X...X...X...."
+  ];
+  let s="";
+  for(let y=0;y<rows.length;y++){
+    for(let x=0;x<rows[y].length;x++){
+      const c=rows[y][x];
+      if(c===".")continue;
+      const col=c==="X"?A:(c==="D"?D:W);
+      s+=`<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${col}"/>`;
+    }
+  }
+  svg.innerHTML=s;
+}
+['s3mascot','s5mascot','s6mascot'].forEach(id=>buildMascot(document.getElementById(id)));
+
+// waveform bars for S5
+(function(){
+  const w=document.getElementById('s5wave');
+  let h="";
+  for(let i=0;i<34;i++) h+=`<span style="flex:1;background:var(--accent);border-radius:3px;height:10px;"></span>`;
+  w.innerHTML=h;
+})();
+
+// ---------- timeline engine ----------
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const easeOut=t=>1-Math.pow(1-t,3);
+const easeOutBack=t=>{const c=1.70158+1;return 1+ (c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2);};
+const easeInOut=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+// local progress
+const P=(t,t0,d)=>clamp((t-t0)/d);
+
+// reveal a word: sets opacity/transform/filter
+function reveal(el,t,t0,d=0.55,opt={}){
+  const p=P(t,t0,d);
+  const e=easeOut(p);
+  const y=opt.y!==undefined?opt.y:46;
+  const blur=opt.blur!==undefined?opt.blur:7;
+  el.style.opacity=p;
+  el.style.filter=`blur(${(1-p)*blur}px)`;
+  el.style.transform=`translateY(${(1-e)*y}px)`;
+}
+
+const scenes=[
+  {id:'s1',start:0.0,end:2.5,dark:true},
+  {id:'s2',start:2.5,end:5.0,dark:true},
+  {id:'s3',start:5.0,end:8.0,dark:false},
+  {id:'s4',start:8.0,end:10.5,dark:false},
+  {id:'s5',start:10.5,end:13.0,dark:true},
+  {id:'s6',start:13.0,end:16.0,dark:true},
+];
+
+function stag(words,t,t0,step=0.11,d=0.5,opt){
+  words.forEach((w,i)=>reveal(w,t,t0+i*step,d,opt));
+}
+
+function render(t){
+  // pick active scene
+  let act=scenes[0];
+  for(const s of scenes){ if(t>=s.start) act=s; }
+  document.body.style.background = act.dark ? getComputedStyle(document.documentElement).getPropertyValue('--dark').trim() : getComputedStyle(document.documentElement).getPropertyValue('--cream').trim();
+  scenes.forEach(s=>document.getElementById(s.id).classList.toggle('on', s.id===act.id));
+  const lt=t-act.start; // local time
+  const q=$=>document.querySelectorAll($);
+  const g=id=>document.getElementById(id);
+
+  if(act.id==='s1'){
+    reveal(g('s1lab'),t,0.0,0.5,{y:-16,blur:2});
+    reveal(g('s1card'),t,0.25,0.6,{y:60,blur:8});
+    g('s1b1').style.width=lerp(0,72,easeOut(P(t,0.7,0.7)))+'%';
+    g('s1b2').style.width=lerp(0,84,easeOut(P(t,0.9,0.7)))+'%';
+    g('s1days').style.opacity=P(t,1.5,0.4);
+    // blink on beat
+    g('s1days').style.opacity = (P(t,1.5,0.4))*(0.55+0.45*Math.abs(Math.sin(t*6)));
+    stag([...g('s1hook').children],t,1.35,0.14,0.5,{y:60});
+  }
+  if(act.id==='s2'){
+    reveal(g('s2lab'),t,2.5,0.5,{y:-16,blur:2});
+    stag([...g('s2stack').children],t,2.7,0.16,0.55,{y:70,blur:9});
+    stag([...g('s2sub').children],t,3.7,0.09,0.45,{y:34,blur:5});
+  }
+  if(act.id==='s3'){
+    reveal(g('s3lab'),t,5.0,0.5,{y:-14,blur:2});
+    stag([...g('s3logo').children],t,5.15,0.14,0.6,{y:60,blur:8});
+    // mascot pop + bob
+    const mp=easeOutBack(P(t,5.5,0.6));
+    const bob=Math.sin((t-5.5)*3.2)*6;
+    g('s3mascot').style.transform=`scale(${clamp(mp,0,1.05)}) translateY(${bob}px)`;
+    g('s3mascot').style.opacity=P(t,5.5,0.3);
+    stag([...g('s3sub').children],t,6.0,0.12,0.5,{y:40,blur:6});
+  }
+  if(act.id==='s4'){
+    reveal(g('s4lab'),t,8.0,0.5,{y:-14,blur:2});
+    stag([...g('s4chips').children],t,8.15,0.14,0.5,{y:-24,blur:4});
+    reveal(g('s4card'),t,8.5,0.65,{y:70,blur:10});
+    stag([...g('s4tag').children],t,9.4,0.14,0.5,{y:44,blur:6});
+  }
+  if(act.id==='s5'){
+    reveal(g('s5lab'),t,10.5,0.5,{y:-14,blur:2});
+    g('s5lab').style.opacity=(P(t,10.5,0.5))*(0.6+0.4*Math.abs(Math.sin(t*7)));
+    stag([...g('s5head').children],t,10.65,0.14,0.55,{y:50,blur:8});
+    reveal(g('s5panel'),t,11.2,0.6,{y:60,blur:9});
+    // animate waveform
+    const bars=g('s5wave').children;
+    const pp=P(t,11.4,0.6);
+    for(let i=0;i<bars.length;i++){
+      const h=10+ pp*(14+52*Math.abs(Math.sin((t*5)+(i*0.55))) + 30*Math.abs(Math.sin(t*2.1+i)));
+      bars[i].style.height=Math.min(118,h)+'px';
+    }
+    const mp=easeOutBack(P(t,12.1,0.5));
+    g('s5mascot').style.transform=`scale(${clamp(mp,0,1.05)})`;
+    g('s5mascot').style.opacity=P(t,12.1,0.3);
+  }
+  if(act.id==='s6'){
+    stag([...g('s6logo').children],t,13.05,0.13,0.55,{y:60,blur:8});
+    const mp=easeOutBack(P(t,13.4,0.55));
+    const bob=Math.sin((t-13.4)*3.0)*5;
+    g('s6mascot').style.transform=`scale(${clamp(mp,0,1.05)}) translateY(${bob}px)`;
+    g('s6mascot').style.opacity=P(t,13.4,0.3);
+    stag([...g('s6sub').children],t,13.7,0.12,0.5,{y:40,blur:6});
+    // CTA pop + subtle pulse
+    const cp=easeOutBack(P(t,14.2,0.55));
+    const pulse=1+0.03*Math.sin((t-14.6)*5);
+    g('s6cta').firstElementChild.style.opacity=P(t,14.2,0.3);
+    g('s6cta').firstElementChild.style.transform=`scale(${clamp(cp,0,1)* (t>14.75?pulse:1)})`;
+    reveal(g('s6url'),t,14.7,0.5,{y:14,blur:3});
+  }
+}
+window.__render=render;
+window.__DURATION=16.0;
+render(0);
+</script>
+</body>
+</html>

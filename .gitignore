@@ -1,0 +1,18 @@
+# Public copy of the orchestrator stack — nothing machine-specific belongs here.
+__pycache__/
+*.pyc
+node_modules/
+*.log
+*.bak
+*.bak-*
+.DS_Store
+Thumbs.db
+
+# Never commit these even if copied in by mistake
+.credentials.json
+settings.json
+settings.local.json
+.claude.json
+.env
+*.env
+mcp-needs-auth-cache.json

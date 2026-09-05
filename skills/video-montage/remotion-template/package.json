@@ -1,0 +1,14 @@
+{
+  "name": "reels-template",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "render": "remotion render src/index.ts Moscow"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.482",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "remotion": "^4.0.482"
+  }
+}
