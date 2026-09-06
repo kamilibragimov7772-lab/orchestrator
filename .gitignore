@@ -13,6 +13,11 @@ Thumbs.db
 settings.json
 settings.local.json
 .claude.json
+.claude.json.backup*
+backups/
+shell-snapshots/
+statsig/
+e2e-report.json
 .env
 *.env
 mcp-needs-auth-cache.json

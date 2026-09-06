@@ -72,7 +72,18 @@ def scalar(value):
     """Small documented YAML subset: quoted/unquoted strings, no YAML execution."""
     value = value.strip()
     if value.startswith('"'):
-        decoded, end = json.JSONDecoder().raw_decode(value)
+        try:
+            decoded, end = json.JSONDecoder().raw_decode(value)
+        except ValueError as exc:
+            # Double quotes mean escape processing, in YAML as in JSON, so a raw
+            # Windows path ("C:\Users\...") is genuinely invalid -- \U and \k are
+            # not escapes. Keeping that strict is right; reporting it as a bare
+            # JSONDecodeError is not, because the caller then says only "bundle
+            # could not be built" and the author has nothing to fix. Name the
+            # cause and the remedy instead.
+            raise ValueError(
+                'invalid double-quoted scalar (%s). Backslashes are escapes here: '
+                "use single quotes ('C:\\path') or double them (\"C:\\\\path\")" % exc)
         tail = value[end:].strip()
         if not isinstance(decoded, str) or (tail and not tail.startswith('#')):
             raise ValueError('invalid quoted scalar')
