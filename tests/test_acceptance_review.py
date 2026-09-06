@@ -324,6 +324,44 @@ class EvidenceBundleIsBounded(RunFixture):
         self.assertTrue(packet['deterministic'])
         self.assertTrue(all({'check', 'status', 'detail'} <= set(c) for c in packet['deterministic']))
 
+    def test_artifact_outside_the_allowed_root_is_not_read(self):
+        """Declared path escaping the vault is refused, not quoted into the prompt.
+
+        Found by CI, not locally: `../../../../etc/passwd` resolves on Linux and
+        macOS and its contents went into the model's context, while Windows
+        passed the same check for want of the file.
+        """
+        outside = Path(tempfile.mkdtemp(prefix='orchestrator-outside-'))
+        secret = outside / 'secret.md'
+        secret.write_text('ВНЕШНИЙ-МАРКЕР\n', encoding='utf-8')
+        self.addCleanup(lambda: __import__('shutil').rmtree(outside, ignore_errors=True))
+        self.write_run(artifact=str(secret))
+        packet = evidence_bundle.collect(self.run, 'F', allowed_roots=[self.vault])
+        item = packet['artifacts'][0]
+        self.assertFalse(item.get('readable'))
+        self.assertIn('outside', item['reason'])
+        self.assertNotIn('ВНЕШНИЙ-МАРКЕР', evidence_bundle.render(packet))
+
+    def test_artifact_inside_the_allowed_root_is_still_read(self):
+        """Paired with the check above: the bound must not refuse everything."""
+        packet = evidence_bundle.collect(self.run, 'F', allowed_roots=[self.vault])
+        self.assertIn('содержимое', packet['artifacts'][0].get('content', ''))
+
+    @unittest.skipUnless(hasattr(Path, 'symlink_to'), 'symlinks unsupported')
+    def test_symlink_out_of_the_vault_is_refused(self):
+        outside = Path(tempfile.mkdtemp(prefix='orchestrator-outside-'))
+        secret = outside / 'secret.md'
+        secret.write_text('ВНЕШНИЙ-МАРКЕР\n', encoding='utf-8')
+        self.addCleanup(lambda: __import__('shutil').rmtree(outside, ignore_errors=True))
+        link = self.vault / 'looks-local.md'
+        try:
+            link.symlink_to(secret)
+        except (OSError, NotImplementedError):
+            self.skipTest('host does not permit symlink creation')
+        self.write_run(artifact=str(link))
+        packet = evidence_bundle.collect(self.run, 'F', allowed_roots=[self.vault])
+        self.assertNotIn('ВНЕШНИЙ-МАРКЕР', evidence_bundle.render(packet))
+
     def test_binary_artifact_is_described_not_quoted(self):
         blob = self.vault / 'report.pdf'
         blob.write_bytes(b'%PDF-1.4\n' + b'\x00' * 100)

@@ -187,8 +187,9 @@ def process_run(path, stack, claude, timeout=900, vault=None):
             stream.write(str(os.getpid()))
 
         fence = evidence_bundle.new_fence()
+        roots = [vault] if vault is not None else [path.parent.parent.parent]
         try:
-            packet = evidence_bundle.collect(path, fence)
+            packet = evidence_bundle.collect(path, fence, allowed_roots=roots)
         except (OSError, ValueError) as exc:
             return {'status': 'failed', 'reason': 'evidence bundle could not be built',
                     'detail': type(exc).__name__}

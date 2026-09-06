@@ -60,9 +60,41 @@ def _read_bounded(path, budget):
     return text, meta
 
 
-def collect(runlog_path, fence):
-    """Build the bundle for one run-log. `fence` marks untrusted regions."""
+def _inside(path, roots):
+    """True when `path` resolves inside one of the allowed roots.
+
+    Symlinks are resolved first, so a link planted inside the vault cannot point
+    the reviewer at /etc/passwd and be quoted as evidence.
+    """
+    try:
+        resolved = Path(path).resolve()
+    except OSError:
+        return False
+    for root in roots:
+        try:
+            if resolved == Path(root).resolve() or Path(root).resolve() in resolved.parents:
+                return True
+        except OSError:
+            continue
+    return False
+
+
+def collect(runlog_path, fence, allowed_roots=None):
+    """Build the bundle for one run-log. `fence` marks untrusted regions.
+
+    `allowed_roots` bounds what may be QUOTED into the prompt. A declared
+    artifact resolving outside them is reported as such and never read: the
+    reviewer is told the path exists and was refused, which is a finding, not
+    silence. Without this a run-log listing `../../../../etc/passwd` had the
+    file read and pasted into the model's context -- caught by CI on Linux and
+    macOS, where that path exists, while Windows passed for want of the file.
+    """
     runlog_path = Path(runlog_path)
+    if allowed_roots is None:
+        # Vault root, not the run-log's own folder: deliverables live beside
+        # _orchestr/, not inside _ACTIVE/. Defaulting to the folder would refuse
+        # every real artifact and make the bound look like it works.
+        allowed_roots = [runlog_path.resolve().parents[2]]
     text = checks.read_text(str(runlog_path))
     fm, body = checks.split_frontmatter(text)
     run_id, status, results = checks.run_checks(str(runlog_path))
@@ -77,15 +109,19 @@ def collect(runlog_path, fence):
         path, anchored = checks.expand(raw, str(runlog_path))
         item = {'declared': raw, 'resolved': str(path) if anchored else None,
                 'anchored': anchored}
-        if anchored:
+        if not anchored:
+            item['readable'] = False
+            item['reason'] = 'relative path not anchored to any known base'
+        elif not _inside(path, allowed_roots):
+            item['readable'] = False
+            item['quoted'] = False
+            item['reason'] = 'resolves outside the allowed roots; refused, not read'
+        else:
             content, meta = _read_bounded(path, MAX_TOTAL_BYTES - spent)
             item.update(meta)
             if content is not None:
                 item['content'] = content
                 spent += len(content.encode('utf-8'))
-        else:
-            item['readable'] = False
-            item['reason'] = 'relative path not anchored to any known base'
         artifacts.append(item)
 
     return {

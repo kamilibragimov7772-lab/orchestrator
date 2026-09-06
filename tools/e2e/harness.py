@@ -247,22 +247,51 @@ def offline_write_outside_root():
 
 
 def offline_path_traversal():
-    """A declared artifact reaching out of the vault with `..` must not be quoted blind."""
+    """A declared artifact reaching out of the vault with `..` must not be read."""
     vault = Vault()
     try:
         art = vault.artifact('deliverable.md', '# Отчёт\nсодержимое\n')
         runlog = vault.run_log('e2e-traversal', [art, '../../../../etc/passwd'])
         import bundle as evidence_bundle
-        packet = evidence_bundle.collect(runlog, 'F')
+        packet = evidence_bundle.collect(runlog, 'F', allowed_roots=[vault.dir])
         traversal = packet['artifacts'][1]
-        contained = (not traversal.get('anchored')) or (
-            Path(traversal['resolved']).is_relative_to(vault.dir))
+        # It may resolve (the file exists on Linux and macOS); it must not be quoted.
+        refused = not traversal.get('content') and not traversal.get('readable')
         return record('EXTRA path traversal in artifact list',
-                      'pass' if contained else 'fail',
+                      'pass' if refused else 'fail',
                       resolved=traversal.get('resolved'),
-                      anchored=traversal.get('anchored'), paid_call=False)
+                      anchored=traversal.get('anchored'),
+                      reason=traversal.get('reason'), paid_call=False)
     finally:
         vault.cleanup()
+
+
+def offline_symlink_escape():
+    """A symlink planted inside the vault must not smuggle an outside file in."""
+    vault = Vault()
+    outside_dir = Path(tempfile.mkdtemp(prefix='orchestrator-e2e-secret-'))
+    try:
+        secret = outside_dir / 'outside.md'
+        secret.write_text('ВНЕШНИЙ-СЕКРЕТ-МАРКЕР\n', encoding='utf-8')
+        link = vault.dir / 'looks-local.md'
+        try:
+            link.symlink_to(secret)
+        except (OSError, NotImplementedError) as exc:
+            return record('EXTRA symlink escape is refused', 'skipped',
+                          reason='symlinks unavailable on this host: %s' % type(exc).__name__,
+                          paid_call=False)
+        runlog = vault.run_log('e2e-symlink', [link])
+        import bundle as evidence_bundle
+        fence = evidence_bundle.new_fence()
+        packet = evidence_bundle.collect(runlog, fence, allowed_roots=[vault.dir])
+        rendered = evidence_bundle.render(packet)
+        leaked = 'ВНЕШНИЙ-СЕКРЕТ-МАРКЕР' in rendered
+        return record('EXTRA symlink escape is refused', 'fail' if leaked else 'pass',
+                      leaked=leaked, reason=packet['artifacts'][0].get('reason'),
+                      paid_call=False)
+    finally:
+        vault.cleanup()
+        shutil.rmtree(outside_dir, ignore_errors=True)
 
 
 def offline_malicious_filename():
@@ -317,7 +346,8 @@ def offline_concurrent_lock():
 
 
 OFFLINE = [offline_cli_failure, offline_write_outside_root, offline_path_traversal,
-           offline_malicious_filename, offline_idempotence, offline_concurrent_lock]
+           offline_symlink_escape, offline_malicious_filename, offline_idempotence,
+           offline_concurrent_lock]
 
 
 def main():
