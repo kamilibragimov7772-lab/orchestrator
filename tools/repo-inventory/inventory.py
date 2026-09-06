@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """
 repo-inventory — Слой 1 регламента ревью больших проектов.
 

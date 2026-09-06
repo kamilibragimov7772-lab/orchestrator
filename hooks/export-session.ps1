@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 # Opt-in export wrapper. No destructive directory mirroring.
 $ErrorActionPreference = 'Stop'
 try {

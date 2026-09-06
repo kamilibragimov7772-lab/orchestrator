@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Explicit, bounded report-only acceptance worker. Host owns background execution.
 
 No Start-Job: that job dies when its PowerShell parent exits. For headless runs,

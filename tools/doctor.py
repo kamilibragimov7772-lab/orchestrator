@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Report local runtime readiness, keeping required and optional checks distinct."""
 import argparse
 import ast

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 from video_config import required_dir, output_file, clip_files, validate_edl, scratch, one_file
 import json, glob, re, os
 WORK = required_dir("VIDEO_WORK", create=True)

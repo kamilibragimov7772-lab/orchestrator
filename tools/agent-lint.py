@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """agent-lint — проверка определений субагентов на исполнимость.
 
 Зачем. Аудит 40 карточек (2026-08-21) показал: главные дефекты стека не стилистические,

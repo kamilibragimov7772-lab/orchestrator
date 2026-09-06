@@ -1,4 +1,5 @@
 #!/bin/sh
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 # Validate the index snapshot. Missing Python blocks commit; it is not a pass.
 root=$(git rev-parse --show-toplevel) || exit 1
 if [ -n "$ORCHESTRATOR_PYTHON" ]; then

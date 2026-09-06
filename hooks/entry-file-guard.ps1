@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 # entry-file-guard.ps1 - Stop hook (v2)
 #
 # Rule (2026-07-31): if sources of a project changed during this session,

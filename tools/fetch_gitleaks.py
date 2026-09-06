@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Fetch a pinned Gitleaks release, verify SHA256, extract only the executable."""
 import argparse
 import hashlib

@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Plan or apply a collision-safe installation. Never overwrites unrelated files.
 
 Use an explicit destination. No network, credential setup, export or remote sync.

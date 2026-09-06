@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Explicit inputs for legacy video recipes. Never auto-select a personal folder."""
 import math
 import os

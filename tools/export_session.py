@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Opt-in session export. Redacted by default when enabled; never mirrors/deletes projects.
 
 Redaction recognizes credential patterns, not all personal or commercial data.

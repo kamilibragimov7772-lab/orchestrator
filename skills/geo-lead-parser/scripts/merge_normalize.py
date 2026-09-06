@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 # merge_normalize.py -- merge + clean 2GIS/Yandex parser CSV exports into one lead base.
 # ASCII-only source (Windows consoles in cp1251 mangle Cyrillic string literals in .py).
 # Column roles are detected BY CONTENT (phone/site/email regex), name = first column,

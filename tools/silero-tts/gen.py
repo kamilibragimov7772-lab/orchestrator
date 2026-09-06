@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Локальная озвучка Silero v4_ru — родной русский, без акцента, без лимитов.
    Работает офлайн. Модель v4_ru.pt (40 МБ) в репозиторий не входит — скачай её из
    официального релиза Silero (https://models.silero.ai/models/tts/ru/v4_ru.pt,
