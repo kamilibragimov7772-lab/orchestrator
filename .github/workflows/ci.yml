@@ -56,12 +56,33 @@ jobs:
                                   --vault "${RUNNER_TEMP}/vault-plan" --mode minimal
           test ! -d "${RUNNER_TEMP}/stack-plan" || { echo "plan mode wrote files"; exit 1; }
 
+      # doctor's overall verdict is `fail` on a runner because the Claude CLI is
+      # not installed there, and that verdict is correct -- a real installation
+      # does need it. Rather than hide that behind `|| true`, the step names the
+      # one check allowed to be unmet here and fails on any other, so an actual
+      # regression in guard wiring or lint cannot ride along with it.
       - name: Disposable minimal install and doctor
         shell: bash
         run: |
           python tools/install.py --destination "${RUNNER_TEMP}/stack" \
                                   --vault "${RUNNER_TEMP}/vault" --mode minimal --apply
-          python tools/doctor.py --root "${RUNNER_TEMP}/stack" --installed
+          python tools/doctor.py --root "${RUNNER_TEMP}/stack" --installed > doctor.json || true
+          python - <<'PY'
+          import json, sys
+          report = json.load(open('doctor.json', encoding='utf-8'))
+          allowed_absent = {'claude'}
+          bad = [c for c in report['checks']
+                 if c['status'] in ('fail', 'error')
+                 or (c.get('required') and c['status'] == 'not-installed'
+                     and c['check'] not in allowed_absent)]
+          absent = [c['check'] for c in report['checks']
+                    if c['status'] == 'not-installed' and c['check'] in allowed_absent]
+          for c in bad:
+              print('FAIL %s: %s' % (c['check'], c.get('detail')))
+          if absent:
+              print('SKIPPED (reason: not available on a CI runner): %s' % ', '.join(absent))
+          sys.exit(1 if bad else 0)
+          PY
 
       # __pycache__ is excluded deliberately: doctor.py runs in the step above and
       # leaves byte-code behind, which made a naive file count report the
