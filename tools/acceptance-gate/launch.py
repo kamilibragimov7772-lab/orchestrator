@@ -30,6 +30,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
 
 import bundle as evidence_bundle
@@ -193,12 +194,19 @@ def process_run(path, stack, claude, timeout=900, vault=None):
                     'detail': type(exc).__name__}
 
         prompt = TASK + '\n' + evidence_bundle.render(packet)
-        env = dict(os.environ, ACCEPTANCE_GATE='1', CLAUDE_HOME=str(stack),
-                   CLAUDE_CONFIG_DIR=str(stack))
-        proc = subprocess.run(reviewer_command(claude), cwd=str(stack), env=env,
-                              input=prompt.encode('utf-8'), capture_output=True,
-                              timeout=timeout,
-                              creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+        # The reviewer has no tools and no settings sources, so it needs neither
+        # the stack nor its agent cards. Pointing CLAUDE_CONFIG_DIR at the stack
+        # only moved the CLI's credentials out from under it: measured 2026-09-06,
+        # that produced `Not logged in` in 151 ms and the wrapper reported it as
+        # `reviewer process failed` -- an infrastructure fault wearing the costume
+        # of a verdict. ACCEPTANCE_GATE=1 stays: it stops a reviewer from
+        # recursively triggering the gate again.
+        env = dict(os.environ, ACCEPTANCE_GATE='1')
+        with tempfile.TemporaryDirectory(prefix='acceptance-reviewer-') as workdir:
+            proc = subprocess.run(reviewer_command(claude), cwd=workdir, env=env,
+                                  input=prompt.encode('utf-8'), capture_output=True,
+                                  timeout=timeout,
+                                  creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
         if proc.returncode:
             return {'status': 'failed', 'reason': 'reviewer process failed',
                     'exit': proc.returncode}
