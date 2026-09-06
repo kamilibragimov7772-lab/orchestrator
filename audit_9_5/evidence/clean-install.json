@@ -1,0 +1,174 @@
+[
+  {
+    "mode": "minimal",
+    "installation": {
+      "status": "installed",
+      "mode": "minimal",
+      "new_files": 64,
+      "destination": "C:\\Users\\kamil\\Documents\\Codex\\2026-09-06\\new-chat-2\\work\\clean-install-final\\minimal\\stack",
+      "next": "Run doctor.py --installed before using agents. Optional plugins and models require separate setup."
+    },
+    "doctor_pass": true,
+    "checks": [
+      {
+        "check": "python",
+        "required": true,
+        "status": "pass",
+        "detail": "3.12.14"
+      },
+      {
+        "check": "git",
+        "required": true,
+        "status": "pass",
+        "detail": "PATH executable"
+      },
+      {
+        "check": "claude",
+        "required": true,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "node",
+        "required": false,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "npm",
+        "required": false,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "ffmpeg",
+        "required": false,
+        "status": "not-installed",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "gitleaks",
+        "required": false,
+        "status": "not-installed",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "pwsh",
+        "required": false,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "agent-contract-lint",
+        "required": true,
+        "status": "pass",
+        "detail": "==============================================================\n\u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043e \u0444\u0430\u0439\u043b\u043e\u0432: 17 | \u041e\u0428\u0418\u0411\u041e\u041a: 0 | \u043f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0436\u0434\u0435\u043d\u0438\u0439: 9"
+      },
+      {
+        "check": "secret-guard-wiring",
+        "required": true,
+        "status": "pass",
+        "detail": "exec-form path and interpreter"
+      },
+      {
+        "check": "risk-guard-wiring",
+        "required": true,
+        "status": "pass",
+        "detail": "exec-form path and interpreter"
+      },
+      {
+        "check": "vault",
+        "required": true,
+        "status": "pass",
+        "detail": "run directory exists"
+      }
+    ],
+    "repeat_new_files": 0
+  },
+  {
+    "mode": "full",
+    "installation": {
+      "status": "installed",
+      "mode": "full",
+      "new_files": 137,
+      "destination": "C:\\Users\\kamil\\Documents\\Codex\\2026-09-06\\new-chat-2\\work\\clean-install-final\\full\\stack",
+      "next": "Run doctor.py --installed before using agents. Optional plugins and models require separate setup."
+    },
+    "doctor_pass": true,
+    "checks": [
+      {
+        "check": "python",
+        "required": true,
+        "status": "pass",
+        "detail": "3.12.14"
+      },
+      {
+        "check": "git",
+        "required": true,
+        "status": "pass",
+        "detail": "PATH executable"
+      },
+      {
+        "check": "claude",
+        "required": true,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "node",
+        "required": false,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "npm",
+        "required": false,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "ffmpeg",
+        "required": false,
+        "status": "not-installed",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "gitleaks",
+        "required": false,
+        "status": "not-installed",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "pwsh",
+        "required": false,
+        "status": "available",
+        "detail": "availability only; authentication and integration NOT TESTED"
+      },
+      {
+        "check": "agent-contract-lint",
+        "required": true,
+        "status": "pass",
+        "detail": "==============================================================\n\u043f\u0440\u043e\u0432\u0435\u0440\u0435\u043d\u043e \u0444\u0430\u0439\u043b\u043e\u0432: 51 | \u041e\u0428\u0418\u0411\u041e\u041a: 0 | \u043f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0436\u0434\u0435\u043d\u0438\u0439: 1"
+      },
+      {
+        "check": "secret-guard-wiring",
+        "required": true,
+        "status": "pass",
+        "detail": "exec-form path and interpreter"
+      },
+      {
+        "check": "risk-guard-wiring",
+        "required": true,
+        "status": "pass",
+        "detail": "exec-form path and interpreter"
+      },
+      {
+        "check": "vault",
+        "required": true,
+        "status": "pass",
+        "detail": "run directory exists"
+      }
+    ],
+    "repeat_new_files": 0
+  }
+]

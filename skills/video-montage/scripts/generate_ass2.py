@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from video_config import required_dir, output_file, clip_files, validate_edl, scratch
 import json, os, glob, re
 
-WORK  = os.environ.get("VIDEO_WORK") or os.path.join(os.environ["USERPROFILE"], "video_work")
+WORK = required_dir("VIDEO_WORK", create=True)
 TRANS = os.path.join(WORK, "trans2")
 OUT   = os.path.join(WORK, "subs2.ass")
 OFFSET = 3.4  # intro card length; shift all subtitle times so they align with delayed voice
 
 js = glob.glob(os.path.join(TRANS, "*.json"))
-if not js:
-    raise SystemExit("no whisper json in " + TRANS)
+if len(js) != 1:
+    raise SystemExit("expected exactly one whisper JSON in " + TRANS)
 data = json.load(open(js[0], encoding="utf-8"))
 
 def ass_time(t):

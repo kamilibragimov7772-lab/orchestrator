@@ -1,0 +1,8 @@
+7.6.5
+PASS entry-file-guard.ps1
+PASS export-session.ps1
+PASS risk-guard.ps1
+PASS run-guard.ps1
+PASS secret-guard.ps1
+PASS sync-stack.ps1
+PASS acceptance-gate.ps1

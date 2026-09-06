@@ -1,0 +1,1056 @@
+{
+  "base": "0c11e1b6c80e780d66df5e843fa0e44efd902b6a",
+  "scope": "source snapshot before audit files and evidence; not semantic coverage",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 330,
+      "lines": 6,
+      "sha256": "56d447b0dd66d79a0557b9d230f43ce0e6fbf656d7f3a90e4790e71c3f74c419",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 1637,
+      "lines": 48,
+      "sha256": "5af8e269d91e712172dbfa91600ae7fccedcd11b12dd1acd1ce006a2eec2eb59",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 408,
+      "lines": 24,
+      "sha256": "e6544ea89b23c846bedc6cd528fbcb420a751e6553d14ef4b4f07d7d165a0773",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_ECC_inspirations.md",
+      "bytes": 10701,
+      "lines": 114,
+      "sha256": "ebb21e9037d7660d0269e2643568887edf7af0336abef9f2cc2e59bcd44e0700",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_gotovo_canon.md",
+      "bytes": 20948,
+      "lines": 109,
+      "sha256": "daaeb5a9ad222f0800c0608f8e21509d5e03c9e359c0642a64bad1c2b68bbb8a",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_methodology_discipline.md",
+      "bytes": 4045,
+      "lines": 40,
+      "sha256": "0f2fc6e8b988b2cd046e16900cf9b68c5d41beab5a499889dc39b4976603b9fd",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_orchestr_lazy.md",
+      "bytes": 14539,
+      "lines": 162,
+      "sha256": "ada53359767a965e8032a71b08cae99eff9e108619b9e68091c897333181f690",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_orchestr_protocol.md",
+      "bytes": 216673,
+      "lines": 1226,
+      "sha256": "1107443a3b103ef8aa2c5a07456dc00f488ab5902487176d0eb2662a8092d6cf",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_orchestr_site_build.md",
+      "bytes": 5090,
+      "lines": 36,
+      "sha256": "1124922d76219c11dd45fd86c1bb8aa4a7569f97c040fe81701931a2441ce55f",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_project_entry_canon.md",
+      "bytes": 20064,
+      "lines": 171,
+      "sha256": "0e22e66582a6d780b44ebb9f91199e49a7d9842fb9d714009121aa98db05ed83",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_public_apis.md",
+      "bytes": 41812,
+      "lines": 409,
+      "sha256": "a3aad9e26cc7aa108687513cf6da22e0143948ddc89347428d904465caa29a7d",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "_video_quality_rubric.md",
+      "bytes": 17447,
+      "lines": 151,
+      "sha256": "dd2d931e31a3bb22a957db830fbee2fcaabfc667df94994810cf39fe033549ec",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "agents/_shared/budget_discipline.md",
+      "bytes": 8726,
+      "lines": 95,
+      "sha256": "67146582a0f96aafbf41872c5c9b2dd45119fba357dd21f12f2519f64a3db72c",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/communication_contract.md",
+      "bytes": 6084,
+      "lines": 93,
+      "sha256": "b18b30c426e85aafc3b35e3a17adf53e4d0ac22f702614cc4d5ab8e48887bd2f",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/decision_rights.md",
+      "bytes": 7934,
+      "lines": 73,
+      "sha256": "f84c80e34873011300ba0ea2531fa25f584daddddf4229d42e7aa07f1609ab4e",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/definition_of_done.md",
+      "bytes": 5101,
+      "lines": 64,
+      "sha256": "e3ce7d6f0a1899b722e5124784b0a4b1274f424822ae12ac38410cb1188d2848",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/handshake_contract.md",
+      "bytes": 11025,
+      "lines": 243,
+      "sha256": "b6d9101df74b56d458f3ae4af62d4212a7d539f4c627fffe47915c941fc05890",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/input_gate.md",
+      "bytes": 6766,
+      "lines": 84,
+      "sha256": "320cee4b4124105a65e6fb7998e9e738de2763326a502a3c6a32438a87e08221",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/migration_checklist.md",
+      "bytes": 6545,
+      "lines": 62,
+      "sha256": "c3fb4f272e39c96ec13f6adf269e29c61635524e482e43ca6a470c599dbcf641",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/site-build/critique_format.md",
+      "bytes": 19437,
+      "lines": 283,
+      "sha256": "ae2f4f036be9d58c1fd7439d9f5f881faaec94e51a25e388e1811b4071f1b752",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/site-build/site_build_orchestrator_prompt.md",
+      "bytes": 28425,
+      "lines": 488,
+      "sha256": "60b1df093e1b4384e2be5c450d66ac0eb7cd323a5f03231bca53d72ff3014044",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/_shared/site-build/site_quality_definition.md",
+      "bytes": 26871,
+      "lines": 371,
+      "sha256": "dab519b46eed3af7b2d26d11112355644080c31a4266df4bfb1a27bf3730d764",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/acceptance-gate.md",
+      "bytes": 17707,
+      "lines": 154,
+      "sha256": "ccd33fc8e9be3d8b3debce6304e10764dff6035c048718c821a96c892fd29bbf",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/accessibility-auditor.md",
+      "bytes": 45970,
+      "lines": 610,
+      "sha256": "6ed4f5aca74c7f932981cb42e08543ef019b020559eb5ad26b342948457a9574",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/agent-eval.md",
+      "bytes": 32859,
+      "lines": 339,
+      "sha256": "e9606d882af77f76d21e6deeb6c7af8b3006e00f1e04b46db5f83de462599279",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/architecture-reviewer.md",
+      "bytes": 37607,
+      "lines": 500,
+      "sha256": "1e6eaec9a25f26d5707bdc5748ef27ccd832f588b4e67966791fdb92f29bce3f",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/astro-engineer.md",
+      "bytes": 47549,
+      "lines": 726,
+      "sha256": "a427072154471244b623843f00946c75262f249f6280a75d8249d90c3d595ae6",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/b2b-strategy-auditor.md",
+      "bytes": 36498,
+      "lines": 479,
+      "sha256": "b2c11d5098f7f19210edba701e2975c86ccd47767ac781e8b93a25cbf64f8d68",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/brief-architect.md",
+      "bytes": 36845,
+      "lines": 456,
+      "sha256": "0e14b6bfefd5c2d115c73906522998663d23e72471c74887ef7081fb51618715",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/code-reviewer.md",
+      "bytes": 39101,
+      "lines": 477,
+      "sha256": "20595c7650eb2f1fdad67c272e33e4764fed9013f3e834edefafc38e10a90f3a",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/competitor-intel.md",
+      "bytes": 39238,
+      "lines": 452,
+      "sha256": "257dfad003d1d4eeb4c208ed63726dbbd1c402f45c7d9c276dd33229cce28120",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/content-reviewer.md",
+      "bytes": 34169,
+      "lines": 454,
+      "sha256": "d046cbac19bf5cd3cbb435b89c08bb48dcbb9a9b8b9da2e70cc3ec3c6a6f2c9d",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/content-strategist.md",
+      "bytes": 46237,
+      "lines": 755,
+      "sha256": "0c1a005637f0b9e16fb514ace343617fd25ffe673e6873b5a9ce6b8ffd7ed766",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/decision-analyst.md",
+      "bytes": 46201,
+      "lines": 644,
+      "sha256": "953d7b3724542b657fcef0f103a32057ea1efdcb55893f15771d209d443fbc95",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/deploy-engineer.md",
+      "bytes": 54646,
+      "lines": 939,
+      "sha256": "a3e473b46ae6c24eb949f0096d86e2af757743db423b1c837acfdc25b379e42e",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/design-reviewer.md",
+      "bytes": 52738,
+      "lines": 688,
+      "sha256": "4b1a9b5c05cdff8432506552d555e399d215749db695f744c719faeee3e9e90f",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/design-system-architect.md",
+      "bytes": 70402,
+      "lines": 1026,
+      "sha256": "d385a376d966a366727014c35ea8ce73033ddcea0a739fc98928fecdd20fefd6",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/discovery-reviewer.md",
+      "bytes": 46255,
+      "lines": 578,
+      "sha256": "e82fe6a9e50f821d3558f92d665340d6915b0215ed86fd61e65f564a6604ba7a",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/document-compiler.md",
+      "bytes": 47716,
+      "lines": 499,
+      "sha256": "915dd6f4bd62a66357df8498a4733887a8d23a8770c712f706cf4f7b3784b530",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/final-quality-gate.md",
+      "bytes": 40355,
+      "lines": 460,
+      "sha256": "d9f6f1297445a2bef25638f00f71d0cab482b75b7ba2128da878b8b2bbd54a02",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/ghostwriter.md",
+      "bytes": 35661,
+      "lines": 323,
+      "sha256": "af490d374e8bec564c38c91c07cb15bbb8bd45308ad0e745a1335f68708a3a8c",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/harness-optimizer.md",
+      "bytes": 26768,
+      "lines": 264,
+      "sha256": "bbc37b80f6be7825416fd7a782cbff9621bc02d69b16de143d21ea35b37df2b3",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/ia-architect.md",
+      "bytes": 31379,
+      "lines": 265,
+      "sha256": "65c9e56f6c6c601805e3f4ef2cdbc14bc91dda1563bea36e2d630818ee7ae381",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/infra-engineer.md",
+      "bytes": 33368,
+      "lines": 350,
+      "sha256": "5faa39fd3a39fcc99f78569ddbb7757d93d5bfbc82a05e718432058192579883",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/interesting-narrator.md",
+      "bytes": 43432,
+      "lines": 539,
+      "sha256": "6a58174a1245acfba15755de31f3ea2f3763c9f7948b8297acdc110a56ea16e4",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/knowledge-curator.md",
+      "bytes": 31842,
+      "lines": 385,
+      "sha256": "cc77d5ad9f2e3f07c456adace89b0f470d4beebd3c09e2a926e09ebdcd1c004b",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/performance-auditor.md",
+      "bytes": 41711,
+      "lines": 556,
+      "sha256": "1b17045c718451274205cc2a27973da2108492b87a11c49bd76c3d8f57ad979c",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/python-build-engineer.md",
+      "bytes": 40537,
+      "lines": 408,
+      "sha256": "b438ba8ae8054158396fd984f0030b7c84350ac72cf08ddefe02b3a2474751a8",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/report-designer.md",
+      "bytes": 41819,
+      "lines": 443,
+      "sha256": "475cbfd57a4ece46d96a23a63a81364336013bde2f620a78813261d5d50acd00",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/retro-analyst.md",
+      "bytes": 18119,
+      "lines": 210,
+      "sha256": "4217e11163fef3382da67b0cf55203f9211cfa0ec71aaaafd67263bada7e7b01",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/security-auditor.md",
+      "bytes": 41715,
+      "lines": 551,
+      "sha256": "5e1359249ca70ff56dde15166cffd47d45b1a73d518f929c7581dd71f0f9925a",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/seo-auditor.md",
+      "bytes": 45009,
+      "lines": 645,
+      "sha256": "a270308540c4add780ad3a4fddc9698af3fcf00697aec1e01fab8df26a9f7f85",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/silent-failure-hunter.md",
+      "bytes": 25112,
+      "lines": 292,
+      "sha256": "a374f1b3fd1add5dfc63ed225c0344527d43ac9a6a0a9b84cec06f6dde5fb4a3",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/site-discoverer.md",
+      "bytes": 45373,
+      "lines": 541,
+      "sha256": "84760015bc4950b9e746f1e6e90289d37f036a7e844e91c527e86216e155f05a",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/site-editor.md",
+      "bytes": 34783,
+      "lines": 385,
+      "sha256": "d0241d211100a9d016f550334383b36a7f96b55b12d6682139f0b6bbe4a7b300",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/strategy-researcher.md",
+      "bytes": 32615,
+      "lines": 388,
+      "sha256": "ad9dddc3e19314835c7b7a7d1747cfd3c640c839da61962db01efc2e4e0974c3",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/synthesizer.md",
+      "bytes": 36556,
+      "lines": 414,
+      "sha256": "88b2238f0068ec31e6266fefd76151cb880a35dc60e6ff403ca636e17e49b98c",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/task-author.md",
+      "bytes": 39630,
+      "lines": 493,
+      "sha256": "3c32d84ca4a13625aca156252b37a4817f583416671194dc08323d9817b7a764",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/usability-reviewer.md",
+      "bytes": 41692,
+      "lines": 562,
+      "sha256": "f0d5a8eb37aff883163b334b00b98d232f8afb40976b1250f9c542e5f25ab52c",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/visual-design-auditor.md",
+      "bytes": 39721,
+      "lines": 510,
+      "sha256": "720c542d6ace4ee3d717090061580d8893ac6de6db90af5078c4b1ff6308e24d",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/visual-designer.md",
+      "bytes": 52720,
+      "lines": 806,
+      "sha256": "8d9f22bbce1d1adbabe675ac2fd4bf2c187b19419ca333620455b65a2e78ff3e",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/visual-regression-auditor.md",
+      "bytes": 31508,
+      "lines": 426,
+      "sha256": "36b9a8db16119cb37ad13d190e2afd9b7d8395f606e9b11bebfbfee5897d8615",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "agents/voice-checker.md",
+      "bytes": 26878,
+      "lines": 314,
+      "sha256": "28a0a47e92093c3faa88ebd05983bf9afdc0cd9099dbc0bff6c0fc7a88726e3a",
+      "coverage": "agent-contract lint; model behavior NOT TESTED"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 1245,
+      "lines": 17,
+      "sha256": "98853c4bdb22b56d6b7a028fb693729551c3f0f2729279336334e56d5a87eb4c",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "AUTHORS.md",
+      "bytes": 1996,
+      "lines": 17,
+      "sha256": "a3c0bf3010079606a0e00a90d5f1c401638e8ef2506101cf76907bd51d83c9f7",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 2674,
+      "lines": 22,
+      "sha256": "9d2c9835a4dfa09b9aaffa185e831dffd79f99c8ea59a415a64d63401f7e6d54",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "CLAUDE.md",
+      "bytes": 21070,
+      "lines": 135,
+      "sha256": "5f47f2ef0a1df520cee4878a852b4613569f57be6f821587736a73fd7b80e657",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/checkpoint.md",
+      "bytes": 4658,
+      "lines": 62,
+      "sha256": "4d16d84eac01d5bf4a2886cc10ebcadf35ce410a2888e3edb9f671fe1ec3b675",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/clip-to-vault.md",
+      "bytes": 2254,
+      "lines": 51,
+      "sha256": "b610481e5329631e3c02a38d77008383c28f9ee76fd806f84bbe33c12adac94a",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/harness-audit.md",
+      "bytes": 3378,
+      "lines": 54,
+      "sha256": "6654b945e5a4d2a796998f13faac6e959c0e48247053290b41f4781c875e1992",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/openclaw-task.md",
+      "bytes": 3285,
+      "lines": 88,
+      "sha256": "f2549ad8a1c40d0898fccc2e7597028c5363ba9b3c44ef5188975d23dd854811",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/oprosi-menya.md",
+      "bytes": 1432,
+      "lines": 14,
+      "sha256": "8584f3f4ce5732044284103ddefe74146ee76719277c3e1508da27ea6c8254b8",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/orchestr.md",
+      "bytes": 745,
+      "lines": 10,
+      "sha256": "327224fa839d651635fde22e41a433db9683a14e1bc1768660c3aa4a00db68ea",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/priyomka.md",
+      "bytes": 2986,
+      "lines": 31,
+      "sha256": "c6e63686c539dd4388ce0c11984f76cabfa4072cb8a8a5cdc541314b796c5051",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/retro.md",
+      "bytes": 2332,
+      "lines": 41,
+      "sha256": "42d90765e25585b300b7c520c7d6ab18a7d80627e0207e78e36c01d310978480",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/reviu.md",
+      "bytes": 5379,
+      "lines": 91,
+      "sha256": "3bf70a1a839b714f594494e5208e907b14a0eaa6f2e758e3cec78929acd969e9",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "commands/session-new.md",
+      "bytes": 2768,
+      "lines": 65,
+      "sha256": "d0f542b291977fbbf0db3331a737608fb878040a5bc228301704693003525ff7",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "bytes": 2100,
+      "lines": 18,
+      "sha256": "18c1adea53be68a84e4b6f5646eee30cdc8f6fc738e04c1c382e5dd71cd38970",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "EVAL_PROMPT.md",
+      "bytes": 28413,
+      "lines": 149,
+      "sha256": "163bced123354ff5051c779cbed6f2e06664d59eba02d0c9f2bb5c64583b3b37",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "githooks/pre-commit",
+      "bytes": 570,
+      "lines": 15,
+      "sha256": "d7f2abe2ddf58be227b03385ce7e6c1cbf263907ddd7cb9666ef3529d2005893",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "hooks/entry-file-guard.ps1",
+      "bytes": 15172,
+      "lines": 309,
+      "sha256": "00f8ca0ec960f6842c0a8982e1027adafeafde3ba1cb3fb8dce0dcc18253790e",
+      "coverage": "PowerShell 5.1/7 parse; guard wrapper runtime test only"
+    },
+    {
+      "path": "hooks/export-session.ps1",
+      "bytes": 1047,
+      "lines": 18,
+      "sha256": "3ba5f33687ad4733651d7e44e90f509ea717675f7e1a27f57f3330dfe7882478",
+      "coverage": "PowerShell 5.1/7 parse; guard wrapper runtime test only"
+    },
+    {
+      "path": "hooks/risk-guard.ps1",
+      "bytes": 151,
+      "lines": 3,
+      "sha256": "5d8d1417c2061e676c93cd56a39e3a3a41e5e4c47e5f925b40b4f50fff9d08e7",
+      "coverage": "PowerShell 5.1/7 parse; guard wrapper runtime test only"
+    },
+    {
+      "path": "hooks/run-guard.ps1",
+      "bytes": 1154,
+      "lines": 19,
+      "sha256": "90474fea4dbd5d56ea4dc8fb52c64a141993470117ea836ce87c561169f2e629",
+      "coverage": "PowerShell 5.1/7 parse; guard wrapper runtime test only"
+    },
+    {
+      "path": "hooks/secret-guard.ps1",
+      "bytes": 153,
+      "lines": 3,
+      "sha256": "ed26c8139775676dfcae9a70177c636345cd3936a72f58a4d5cd75504c430fc7",
+      "coverage": "PowerShell 5.1/7 parse; guard wrapper runtime test only"
+    },
+    {
+      "path": "hooks/sync-stack-silent.vbs",
+      "bytes": 460,
+      "lines": 9,
+      "sha256": "9d49507f4367ffaebd02e4b135e8838ee8413c8f945b9cd4d227569cc5883170",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "hooks/sync-stack.ps1",
+      "bytes": 1129,
+      "lines": 22,
+      "sha256": "7373f771f9d972277a4157c4cdeddc5f1d40c5da7b3c82a14b6cdc59bd797aec",
+      "coverage": "PowerShell 5.1/7 parse; guard wrapper runtime test only"
+    },
+    {
+      "path": "INSTALL.md",
+      "bytes": 7148,
+      "lines": 67,
+      "sha256": "8b0a24e922f0108ee98682af7926f6d5c7ce2bfce68cd641d8377645b920160a",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1078,
+      "lines": 21,
+      "sha256": "337c6f7283faf9d94556502aaea51d41f0aa9c557f7bddf45b0b22a956eead0c",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5105,
+      "lines": 46,
+      "sha256": "6aabc551ad8232b0a104a857baca56c8a41f9832c67cba76e16b2ba2503ad013",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "SECURITY.md",
+      "bytes": 4990,
+      "lines": 30,
+      "sha256": "a659e1ae1d23f3b06de2b10653e1d44a1489874fc7e11477b7337ad2c691e4ea",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "settings.example.json",
+      "bytes": 739,
+      "lines": 34,
+      "sha256": "c517ef3b943390895ed631ab9bbcf96b1759d7a0e3a5aef4b0f8ec07340b2795",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/arch-report/REPORT.md",
+      "bytes": 7785,
+      "lines": 114,
+      "sha256": "c5f52ed9cf9a78dadf4f31c5efeaa2d0db438fe6c17099fe950fa5193fe6ac6d",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/arch-report/SKILL.md",
+      "bytes": 8662,
+      "lines": 71,
+      "sha256": "bc8ddc997d026e1203481864677843710b031a99fe13dd702502a2974f7d4b67",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/geo-lead-parser/references/city_viewpoints.md",
+      "bytes": 1975,
+      "lines": 30,
+      "sha256": "84c2f8b104c8f2aa0b51b05a6b2265ca27d918378b57481499d1803545a97255",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/geo-lead-parser/scripts/merge_normalize.py",
+      "bytes": 5578,
+      "lines": 156,
+      "sha256": "b3c9a7e36380e1038e0c023ba960b663f333cff64f38abc849d1f34133097fee",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/geo-lead-parser/SKILL.md",
+      "bytes": 13506,
+      "lines": 97,
+      "sha256": "0914a4d148d9543436a67570059dd88bbb5d53998e9367b6dfc3b9a79d03325d",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/oprosi-menya/SKILL.md",
+      "bytes": 11959,
+      "lines": 119,
+      "sha256": "4ec5e6295d3f0e2ddbbce22bef35e575489d51695c20da9298c5e087cd758b25",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/package.json",
+      "bytes": 281,
+      "lines": 14,
+      "sha256": "84af7a6287e562e3e3b3865670a1ca7f6dca972574a5d348a7584229f8b94288",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/remotion.config.ts",
+      "bytes": 115,
+      "lines": 4,
+      "sha256": "fe968ee4188f28ba4281bb5861f95e60ae098b6fbb8a17cf362988f27a7733f9",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/src/data.json",
+      "bytes": 3178,
+      "lines": 1,
+      "sha256": "50f97e8eebdb4e77cd0aa0935306a1a725e8b8980b42e3b19ef7ebcda7bba4a9",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/src/index.ts",
+      "bytes": 105,
+      "lines": 4,
+      "sha256": "5462d3268136731ce43bfd7c5072ea1ba48b51fec94fa30076f5044f4b39e4a2",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/src/Moscow.tsx",
+      "bytes": 8723,
+      "lines": 183,
+      "sha256": "5d7563cbea246d613b343b4ce72ad81d04ca4361d6ae9d67b5998f02893a3614",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/src/Root.tsx",
+      "bytes": 509,
+      "lines": 19,
+      "sha256": "887dde22814fd941f181aa18e64a00974405e8da0bb79a129e8f70ca0a9bbb88",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/src/Test.tsx",
+      "bytes": 1004,
+      "lines": 17,
+      "sha256": "406f0f66e260f501aae337f1ed4fb0fbdc1065171e172089c643002393d3d91e",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/remotion-template/tsconfig.json",
+      "bytes": 265,
+      "lines": 13,
+      "sha256": "c27be599aa87f982600278bd23bbfa991cc72b4cedafa722d32d9a69e6f6a222",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/scripts/build_edit.py",
+      "bytes": 3370,
+      "lines": 69,
+      "sha256": "fb5c2ba0512f1200d042d0ca8788eb8bd6f2b7b95c3db64118e45cb7470b4e55",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/build_edit2.py",
+      "bytes": 4804,
+      "lines": 94,
+      "sha256": "85172068ee67feedf5c7c241221f2ace949887891aff76d9fb9b88c4c8828cc3",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/build_edit3.py",
+      "bytes": 4531,
+      "lines": 83,
+      "sha256": "d49c53fc5fbb0e044a8139517d1d29d121298ae3f67244f4dcc020fc8577c3a5",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/find_repeats.py",
+      "bytes": 1371,
+      "lines": 33,
+      "sha256": "5ffe632021ccf5e3473ae2e9aa324b1adfa52e05a94b43731001152c1c71d02c",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/gen_final_ass.py",
+      "bytes": 3634,
+      "lines": 102,
+      "sha256": "e0bfdf9f37f9070cba181097f72f082e961293d4494fcf92d68cfbbf82f9db76",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/gen_remotion_data.py",
+      "bytes": 3399,
+      "lines": 73,
+      "sha256": "179ab5adcf8cf29745060ed84093710f00e54cfa486f7a495b6084ad70af3039",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/generate_ass.py",
+      "bytes": 3210,
+      "lines": 90,
+      "sha256": "35490e3b1fbbc5b694a20f196277542b469fbab76a414d1285c9e6fa4d652ba8",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/generate_ass2.py",
+      "bytes": 3031,
+      "lines": 79,
+      "sha256": "fd920248a0e8d96d003ac27e6cd20793cf89d94e4345e5adf5c901c4897d36cd",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/parse_edl.py",
+      "bytes": 1527,
+      "lines": 43,
+      "sha256": "05e7d16711abde55ad9ac2562e0081e7183556ad363afc013e3e6e4650da597a",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/scripts/README.md",
+      "bytes": 2384,
+      "lines": 13,
+      "sha256": "e84f39d9868ebda7af6862852b1eebf936a5c2816eed2c3de14b40a7add3ea68",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "skills/video-montage/scripts/video_config.py",
+      "bytes": 2509,
+      "lines": 58,
+      "sha256": "9b2f571b97e63f4ef6e1ccd5615537a8c8acaa5b42cd62c699c055adb5f41a34",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "skills/video-montage/SKILL.md",
+      "bytes": 9632,
+      "lines": 54,
+      "sha256": "4d56a90a5604bf117074be4c3df22dcdef44380d672e76170ad34b54cd9cdb6f",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "sync-allowlist.txt",
+      "bytes": 5467,
+      "lines": 177,
+      "sha256": "b7344f56ce92c1ae96eeed65fa62b5b2a40112aeee1a62a540f5be73c1048c66",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "tests/test_acceptance.py",
+      "bytes": 4576,
+      "lines": 114,
+      "sha256": "746a7cdd48ca0b0dc6872d1fc17a9e34c859cd00f81cc2d0dc9d57bd5dbd90e6",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_acceptance_launch.py",
+      "bytes": 2058,
+      "lines": 47,
+      "sha256": "c7728afdf1f2126d6859f9e64b5fcf0b9021fe5331620752869b62d46bb1a805",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_agent_lint.py",
+      "bytes": 3129,
+      "lines": 81,
+      "sha256": "434f961b050277c53fe8f1ac28954e4452978db391556b665129f023c453006d",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_export.py",
+      "bytes": 2379,
+      "lines": 55,
+      "sha256": "6b3dbc132bbd93658b986e8f9f91067ae2d5ba2f1abc1f533671ad98d7e2474b",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_guards.py",
+      "bytes": 3776,
+      "lines": 79,
+      "sha256": "9fdb1df283114d08392da9a28df6c89b37370f8140644598947a639e1bdc3cc5",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_helpers.py",
+      "bytes": 5702,
+      "lines": 111,
+      "sha256": "b512d21fc4c9c02f63ad7e954eb0f3362a0d66073a40b8a8093b648df3e47fe8",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_install.py",
+      "bytes": 3040,
+      "lines": 66,
+      "sha256": "5aec64ce9b4f54f182f70a85cf63469e57958ff236282867adcede9ba925568c",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_pre_commit.py",
+      "bytes": 1832,
+      "lines": 48,
+      "sha256": "bcfa18e05fbcf7e91bee4f54dfb0775195beb51f3596b6e516eb1e3825123e12",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tests/test_sync.py",
+      "bytes": 6240,
+      "lines": 130,
+      "sha256": "aac9e91a9c6688c7bf3441b4952179a3277c5e029828f2ade24b5250bd4c1cc9",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/acceptance-gate/acceptance-gate.ps1",
+      "bytes": 901,
+      "lines": 17,
+      "sha256": "e9a0dea9218cd8fb8e7f4f9fe2fb314f5cb22fb3164b0a19794b7c73302530e0",
+      "coverage": "PowerShell 5.1/7 parse; guard wrapper runtime test only"
+    },
+    {
+      "path": "tools/acceptance-gate/checks.py",
+      "bytes": 21592,
+      "lines": 457,
+      "sha256": "477cad707ddee35a67298e37a3641a581dfc1cc4ef5e0124b5c717a4396daee9",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/acceptance-gate/launch.py",
+      "bytes": 5107,
+      "lines": 90,
+      "sha256": "6e3f579a40aad2084864bc1a65b3e3f74938f2dc34f26a973af23bcf76fdf8a8",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/acceptance-gate/README.md",
+      "bytes": 3658,
+      "lines": 29,
+      "sha256": "602397c15469434a114ed4436e038614b60a05b5735b952475e0597a290e72ea",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "tools/agent-lint.py",
+      "bytes": 28088,
+      "lines": 427,
+      "sha256": "d4bda1f4fc6d7510991d998de0e3e5dfe86fe281e8643a31790821315bd9500e",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/doctor.py",
+      "bytes": 3213,
+      "lines": 57,
+      "sha256": "3cce064c2e17f7de53efedcc259a847320421526adea3a2b26a4a8b710b18e7d",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/export_session.py",
+      "bytes": 3154,
+      "lines": 64,
+      "sha256": "2f23626125c88aefb1606af5c10baff8942c99045d41a5b790bd5ae197ef9959",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/fetch_gitleaks.py",
+      "bytes": 1876,
+      "lines": 45,
+      "sha256": "7bfc38dcfe25fec85376ff8b23c502e351a6d3ac9de90014e2f141cdee2fbd09",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/gotovo-counter.py",
+      "bytes": 9956,
+      "lines": 168,
+      "sha256": "445199fb27edcc11bb7c8f4a2b3feefd478e9079874545f762aa0fe04585aa96",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/guard.py",
+      "bytes": 3569,
+      "lines": 75,
+      "sha256": "0c140fd69f453e74d204fc1cc02644aa3f144247d4325ce053a52d55de82ef5d",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/install.py",
+      "bytes": 8668,
+      "lines": 156,
+      "sha256": "2ffe7d53278d95a8d2936b76969f987fdda206d237bf4456cf34357cfe59ba3c",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/kinetic-promo/fonts.css",
+      "bytes": 1415190,
+      "lines": 6,
+      "sha256": "c14ae053b67071ed9de322ba03f6601ef1bd4e0689495c6a09c5bbb1bc7ba6c8",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "tools/kinetic-promo/README.md",
+      "bytes": 6122,
+      "lines": 60,
+      "sha256": "5ffc3a8201dee7d6e15cba39ab3b181290422671b44585f37b2cdd7715ac2685",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "tools/kinetic-promo/render.js",
+      "bytes": 1181,
+      "lines": 28,
+      "sha256": "5ed145f1b096245972f38eb0a33b784871011cdfe313ac7d7b3af41a4a545ce0",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "tools/kinetic-promo/scene.html",
+      "bytes": 15130,
+      "lines": 334,
+      "sha256": "af1602dee8b61e5d286b7e7f2abdc5e1be1e1346ab0f95d182bdc25f15231a41",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "tools/pre_commit.py",
+      "bytes": 1711,
+      "lines": 39,
+      "sha256": "5d2e9df89a2ac747edcbf1517a78e4fae071be6ced0945019cb8ac9066e02ae0",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/repo-inventory/inventory.py",
+      "bytes": 33251,
+      "lines": 694,
+      "sha256": "dcf79bd8ea476b585ea2fe39bf81bc696ac715ca93a47bb92d893db0a25429a6",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/secret_scan.py",
+      "bytes": 3224,
+      "lines": 77,
+      "sha256": "4c01f8e285f8ae89b6e9eb6a9e621521c15009967e8eb0ac7f3ed975275f5b1d",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/silero-tts/gen.py",
+      "bytes": 3241,
+      "lines": 76,
+      "sha256": "d0c44f7cd809b273eece68ab9f541f07bea5fb2b6c54b72e9562edcb3f3c6d85",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/silero-tts/README.md",
+      "bytes": 2453,
+      "lines": 38,
+      "sha256": "8a2284fb13f0f98600e0d623b283f46da6e2fd24fd82db344d7589a606871fff",
+      "coverage": "metadata/text inventory; no claim of full semantic review"
+    },
+    {
+      "path": "tools/sync_stack.py",
+      "bytes": 5694,
+      "lines": 115,
+      "sha256": "e6df21ee4ae960bbbc0ab57697aad84ba2363262ac56eb055fd010a735762b5d",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    },
+    {
+      "path": "tools/verify.py",
+      "bytes": 1815,
+      "lines": 41,
+      "sha256": "0f40fd7f3330412df1b8c3eef9e99e7db3600d357b9bac7ccea8fd7230946aa0",
+      "coverage": "Python parse; selected regression tests (see test matrix)"
+    }
+  ]
+}

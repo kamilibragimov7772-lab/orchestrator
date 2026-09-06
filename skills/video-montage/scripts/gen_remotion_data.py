@@ -1,42 +1,39 @@
 # -*- coding: utf-8 -*-
+from video_config import required_dir, output_file, clip_files, validate_edl, scratch, one_file
 import json, os, glob, subprocess, re, shutil
 
 PB = os.environ.get("FFPROBE_BIN", "ffprobe")
-HOME = os.environ["USERPROFILE"]
-WORK = os.environ.get("VIDEO_WORK") or os.path.join(HOME, "video_work")
+WORK = required_dir("VIDEO_WORK", create=True)
 # your copy of skills/video-montage/remotion-template
-PROJ = os.environ.get("REMOTION_PROJECT") or os.path.join(HOME, "remotion-project")
+PROJ = required_dir("REMOTION_PROJECT")
 
 # locate source clips folder
-src = None
-roots = [HOME, os.path.join(HOME, "OneDrive")] + [d for d in glob.glob(os.path.join(HOME, "OneDrive", "*")) if os.path.isdir(d)]
-for base in roots:
-    for d in glob.glob(os.path.join(base, "*")):
-        if os.path.isdir(d) and len(glob.glob(os.path.join(d, "*.MOV"))) > 3 and glob.glob(os.path.join(d, "*.ogg")):
-            src = d; break
-    if src: break
+src = required_dir("VIDEO_SOURCE")
+
 print("src:", src)
 
 CLEAN = os.path.join(WORK, "clean_voice2.m4a")
 # copy clean voice into source folder so Remotion --public-dir can serve it
-shutil.copy(CLEAN, os.path.join(src, "clean_voice2.m4a"))
+audio_copy = os.path.join(src, "clean_voice2.m4a")
+if os.path.exists(audio_copy): raise SystemExit("source audio target already exists; preserve it")
+shutil.copy(CLEAN, audio_copy)
 
 VOICE = float(subprocess.check_output([PB, "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", CLEAN]).decode().strip())
 
 # clips from EDL, rescaled to voice length, mapped to real filenames
-edl = json.load(open(os.path.join(WORK, "edl.json"), encoding="utf-8"))
+edl = validate_edl(json.load(open(os.path.join(WORK, "edl.json"), encoding="utf-8")), src)
 total = sum(float(e.get("dur_seconds") or 0) for e in edl) or 1
 scale = VOICE / total
 clips = []
 for e in edl:
     base = (e.get("clip") or "").strip()
-    matches = [os.path.basename(m) for m in glob.glob(os.path.join(src, base + ".*")) if m.lower().endswith((".mov", ".mp4"))]
+    matches = [os.path.basename(m) for m in clip_files(src, base)]
     if not matches:
         continue
     clips.append({"file": matches[0], "dur": round(max(1.3, float(e.get("dur_seconds") or 2.5) * scale), 3)})
 
 # words from clean transcript (trans3), dedup consecutive
-data3 = json.load(open(glob.glob(os.path.join(WORK, "trans3", "*.json"))[0], encoding="utf-8"))
+data3 = json.load(open(one_file(os.path.join(WORK, "trans3"), ".json"), encoding="utf-8"))
 def norm(s): return re.sub(r"\W+", "", s.lower(), flags=re.UNICODE)
 raw = []
 for seg in data3.get("segments", []):

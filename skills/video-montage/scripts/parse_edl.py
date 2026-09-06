@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from video_config import required_dir, output_file, clip_files, validate_edl, scratch
 # Extract the EDL (list of {clip, dur_seconds, covers_text}) from an agent's JSON answer
 # and save it as <VIDEO_WORK>/edl.json for the build_edit*.py / gen_remotion_data.py scripts.
 #   py parse_edl.py <path-to-agent-output.txt|json>
 import json, os, sys
-WORK = os.environ.get("VIDEO_WORK") or os.path.join(os.environ["USERPROFILE"], "video_work")
+WORK = required_dir("VIDEO_WORK", create=True)
 if len(sys.argv) < 2:
     raise SystemExit("usage: py parse_edl.py <agent-output-file>")
 p = sys.argv[1]
@@ -30,7 +31,8 @@ def find_edl(o):
 edl = find_edl(data)
 if not edl:
     print("NO EDL FOUND")
-    raise SystemExit(0)
+    raise SystemExit(1)
+validate_edl(edl)
 tot = 0.0
 for e in edl:
     d = float(e.get("dur_seconds") or 0)

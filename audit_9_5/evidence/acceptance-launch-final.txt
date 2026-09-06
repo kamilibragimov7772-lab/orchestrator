@@ -1,0 +1,10 @@
+test_archived_run_with_comment_is_found (test_acceptance_launch.LaunchTests.test_archived_run_with_comment_is_found) ... ok
+test_existing_lock_is_preserved (test_acceptance_launch.LaunchTests.test_existing_lock_is_preserved) ... ok
+test_reviewed_run_is_not_repeated (test_acceptance_launch.LaunchTests.test_reviewed_run_is_not_repeated) ... ok
+test_success_exit_without_report_is_failure (test_acceptance_launch.LaunchTests.test_success_exit_without_report_is_failure) ... ok
+test_timeout_releases_lock (test_acceptance_launch.LaunchTests.test_timeout_releases_lock) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.025s
+
+OK

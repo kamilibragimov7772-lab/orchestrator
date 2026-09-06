@@ -16,3 +16,9 @@ settings.local.json
 .env
 *.env
 mcp-needs-auth-cache.json
+.tools/
+.pytest_cache/
+*.jsonl
+*.acceptance.lock
+orchestrator-sync.lock
+.orchestrator-install.json

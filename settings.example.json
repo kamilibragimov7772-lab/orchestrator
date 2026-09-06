@@ -1,68 +1,31 @@
 {
-  "_comment": "Example hooks for the orchestrator stack. MERGE the hooks block into your existing ~/.claude/settings.json (do not blindly overwrite if you already have Stop/PreToolUse hooks). Hook scripts live in ~/.claude/hooks/; $HOME is expanded by PowerShell (\"shell\": \"powershell\"), so no username is needed. Optional extra Stop hook: tools/acceptance-gate/acceptance-gate.ps1 (see its README). On macOS/Linux: rewrite the .ps1 hooks for your shell (see INSTALL.md).",
-  "permissions": {
-    "allow": [
-      "Bash(git:*)",
-      "Bash(npm:*)",
-      "Bash(ls:*)",
-      "Bash(mkdir:*)",
-      "Write",
-      "Edit",
-      "WebSearch",
-      "WebFetch"
-    ],
-    "defaultMode": "auto"
-  },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|Bash",
+        "matcher": "Write|Edit|Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\.claude\\hooks\\secret-guard.ps1\"",
-            "shell": "powershell",
+            "command": "<ABSOLUTE_PYTHON_EXECUTABLE>",
+            "args": [
+              "<STACK_ROOT>/tools/guard.py",
+              "secret"
+            ],
             "timeout": 15
           }
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\.claude\\hooks\\risk-guard.ps1\"",
-            "shell": "powershell",
+            "command": "<ABSOLUTE_PYTHON_EXECUTABLE>",
+            "args": [
+              "<STACK_ROOT>/tools/guard.py",
+              "risk"
+            ],
             "timeout": 15
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\.claude\\hooks\\entry-file-guard.ps1\"",
-            "shell": "powershell",
-            "timeout": 30,
-            "statusMessage": "Check project entry file..."
-          },
-          {
-            "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\.claude\\hooks\\export-session.ps1\"",
-            "shell": "powershell",
-            "timeout": 120,
-            "statusMessage": "Export session + sync project folders to vault...",
-            "async": true
-          },
-          {
-            "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$HOME\\.claude\\hooks\\sync-stack.ps1\"",
-            "shell": "powershell",
-            "timeout": 90,
-            "statusMessage": "Sync stack to git remote...",
-            "async": true
           }
         ]
       }

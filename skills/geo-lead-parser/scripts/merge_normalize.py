@@ -47,7 +47,7 @@ def norm_phone(s):
         return '+7' + digits[1:]
     if len(digits) == 10:
         return '+7' + digits
-    if digits:
+    if 7 <= len(digits) <= 15:
         return '+' + digits
     return ''
 
@@ -66,8 +66,11 @@ def main():
     files = []
     for pat in ins:
         hit = glob.glob(pat)
-        files.extend(hit if hit else [pat])
-    files = [f for f in files if os.path.isfile(f)]
+        if not hit or any(not os.path.isfile(f) for f in hit):
+            raise SystemExit('missing input: ' + pat)
+        files.extend(hit)
+    if any(os.path.realpath(f) == os.path.realpath(out_path) for f in files):
+        raise SystemExit('output must not overwrite an input file')
     if not files:
         print('no input files found')
         sys.exit(1)
@@ -78,6 +81,12 @@ def main():
         h, body = read_csv(f)
         if header is None and h:
             header = h
+        if not h or len(h) != len(set(h)):
+            raise SystemExit('empty or duplicate CSV headers: ' + f)
+        if set(h) != set(header):
+            raise SystemExit('incompatible CSV headers; normalize schemas first: ' + f)
+        if h != header:
+            body = [[cell(row, h.index(key)) for key in header] for row in body]
         all_body.extend(body)
 
     if not header:
@@ -114,7 +123,7 @@ def main():
         w.writerows(clean)
 
     n = len(clean)
-    with_phone = sum(1 for r in clean if phone_c >= 0 and cell(r, phone_c))
+    with_phone = sum(1 for r in clean if phone_c >= 0 and norm_phone(cell(r, phone_c)))
     with_site  = sum(1 for r in clean if site_c  >= 0 and cell(r, site_c))
     with_email = sum(1 for r in clean if email_c >= 0 and cell(r, email_c))
     raw_total = len(all_body)

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from video_config import required_dir, output_file, clip_files, validate_edl, scratch, one_file
 import json, glob, re, os
-WORK = os.environ.get("VIDEO_WORK") or os.path.join(os.environ["USERPROFILE"], "video_work")
-data = json.load(open(glob.glob(os.path.join(WORK, "trans2", "*.json"))[0], encoding="utf-8"))
+WORK = required_dir("VIDEO_WORK", create=True)
+data = json.load(open(one_file(os.path.join(WORK, "trans2"), ".json"), encoding="utf-8"))
 def norm(s): return re.sub(r"\W+", "", s.lower(), flags=re.UNICODE)
 W = []
 for seg in data.get("segments", []):

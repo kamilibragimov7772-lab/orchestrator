@@ -26,6 +26,7 @@ import os
 import re
 import sys
 import zipfile
+import xml.etree.ElementTree as ET
 
 # Корень vault и каталог стека — из окружения, с разумными умолчаниями.
 VAULT = os.environ.get("VAULT_ROOT") or os.path.expanduser("~/vault")
@@ -52,18 +53,36 @@ class Check:
 
 
 def read_text(path):
-    with io.open(path, encoding="utf-8", errors="replace") as fh:
+    with io.open(path, encoding="utf-8-sig") as fh:
         return fh.read()
 
 
 def split_frontmatter(text):
     """Возвращает (сырой frontmatter, тело). Без внешнего YAML-парсера."""
-    if not text.startswith("---"):
+    if not text.startswith("---\n"):
         return "", text
-    end = text.find("\n---", 3)
-    if end == -1:
+    end = re.search(r"(?m)^---[ \t]*$", text[4:])
+    if end is None:
         return "", text
-    return text[3:end], text[end + 4 :]
+    pos = 4 + end.start()
+    return text[4:pos], text[4 + end.end():]
+
+
+def scalar(value):
+    """Small documented YAML subset: quoted/unquoted strings, no YAML execution."""
+    value = value.strip()
+    if value.startswith('"'):
+        decoded, end = json.JSONDecoder().raw_decode(value)
+        tail = value[end:].strip()
+        if not isinstance(decoded, str) or (tail and not tail.startswith('#')):
+            raise ValueError('invalid quoted scalar')
+        return decoded
+    if value.startswith("'"):
+        match = re.fullmatch(r"'((?:[^']|'')*)'[ \t]*(?:#.*)?", value)
+        if not match:
+            raise ValueError('invalid single-quoted scalar')
+        return match.group(1).replace("''", "'")
+    return re.split(r"[ \t]+#", value, maxsplit=1)[0].strip()
 
 
 def fm_scalar(fm, key):
@@ -80,25 +99,48 @@ def fm_scalar(fm, key):
     Комментарий режем только по « #» с пробелом слева — чтобы не резать
     решётку внутри осмысленного значения.
     """
-    m = re.search(r"^%s:\s*(.+?)\s*$" % re.escape(key), fm, re.M)
-    if not m:
+    matches = re.findall(r"^%s:[ \t]*(.*)$" % re.escape(key), fm, re.M)
+    if not matches:
         return None
-    return re.sub(r"\s+#.*$", "", m.group(1)).strip()
+    if len(matches) != 1:
+        raise ValueError('duplicate frontmatter key: ' + key)
+    return scalar(matches[0])
 
 
 def fm_list(fm, key):
     """Читает как inline-список [a, b], так и блочный список из дефисов."""
-    inline = re.search(r"^%s:\s*\[(.*?)\]\s*$" % re.escape(key), fm, re.M | re.S)
+    if len(re.findall(r"^%s:" % re.escape(key), fm, re.M)) > 1:
+        raise ValueError('duplicate list: ' + key)
+    inline = re.search(r"^%s:[ \t]*\[(.*?)\][ \t]*(?:#.*)?$" % re.escape(key), fm, re.M)
     if inline:
-        return [i.strip() for i in inline.group(1).split(",") if i.strip()]
+        # Quoted paths may contain commas. Split only outside quoted strings.
+        items, current, quote, escaped = [], '', None, False
+        for c in inline.group(1):
+            if escaped:
+                current += c; escaped = False; continue
+            if c == '\\' and quote == '"':
+                current += c; escaped = True; continue
+            if quote:
+                current += c
+                if c == quote: quote = None
+            elif c in "\"'":
+                quote = c; current += c
+            elif c == ',':
+                if not current.strip(): raise ValueError('empty artifact path')
+                items.append(scalar(current)); current = ''
+            else:
+                current += c
+        if quote: raise ValueError('unclosed quote in artifact list')
+        if current.strip(): items.append(scalar(current))
+        return items
 
-    block = re.search(r"^%s:\s*$" % re.escape(key), fm, re.M)
+    block = re.search(r"^%s:[ \t]*(?:#.*)?$" % re.escape(key), fm, re.M)
     if not block:
         return []
     items = []
     for line in fm[block.end() :].split("\n"):
         if re.match(r"^\s*-\s+", line):
-            items.append(re.sub(r"^\s*-\s+", "", line).strip())
+            items.append(scalar(re.sub(r"^\s*-\s+", "", line)))
         elif line.strip() and not line.startswith(" "):
             break  # начался следующий ключ верхнего уровня
     return items
@@ -117,28 +159,23 @@ def expand(path, runlog=None):
     где файл реально есть. Не нашли — возвращаем кандидата от корня vault,
     чтобы в отчёте был предсказуемый путь, а не случайный cwd.
     """
-    path = path.strip().strip("`'\"")
-    # в логах у путей бывает хвостовой комментарий: «README.md (исправлен)»
-    path = re.sub(r"\s+\(.*\)$", "", path)
+    path = path.strip().strip("`")
+    if not path or re.search(r"<[^>]*>|\$\w+|\$\{|%\w+%", path):
+        raise ValueError('empty or unresolved artifact path')
     path = os.path.expanduser(os.path.expandvars(path))
 
     if os.path.isabs(path):
         return path, True
 
     vault = VAULT
-    bases = [os.getcwd(), vault, os.path.expanduser("~"), STACK]
-    if runlog:
-        bases.insert(1, os.path.dirname(os.path.abspath(runlog)))
-
-    for base in bases:
-        candidate = os.path.join(base, path)
-        if os.path.exists(candidate):
-            return candidate, True
-
-    # Не привязали — это «не смог проверить», а не «провалено». Ложный
-    # провал заставляет чинить то, что не сломано, и обесценивает вердикт
-    # быстрее, чем пропуск.
-    return os.path.join(vault, path), False
+    if not runlog:
+        return os.path.abspath(path), True
+    bases = [os.path.dirname(os.path.abspath(runlog)), vault, STACK]
+    found = {os.path.normcase(os.path.realpath(os.path.join(base, path)))
+             for base in bases if os.path.exists(os.path.join(base, path))}
+    if len(found) > 1:
+        raise ValueError('ambiguous artifact path; use an absolute path')
+    return (next(iter(found)) if found else os.path.join(bases[0], path)), True
 
 
 # ------------------------------------------------- открываемость артефактов
@@ -165,17 +202,25 @@ def artifact_opens(path):
     try:
         if ext in (".docx", ".xlsx", ".pptx"):
             with zipfile.ZipFile(path) as z:
+                if sum(x.file_size for x in z.infolist()) > 50 * 1024 * 1024:
+                    return SKIP, "Office archive exceeds 50 MiB inspection budget"
                 if z.testzip() is not None:
                     return FAIL, "битый архив office-формата"
-                if not any(n.startswith("[Content_Types]") for n in z.namelist()):
+                if '[Content_Types].xml' not in z.namelist():
                     return FAIL, "не office-документ внутри"
-            return OK, "office-формат открывается (%d Б)" % size
+                ET.fromstring(z.read('[Content_Types].xml'))
+                part = {'.docx': 'word/document.xml', '.xlsx': 'xl/workbook.xml', '.pptx': 'ppt/presentation.xml'}[ext]
+                root = ET.fromstring(z.read(part))
+                tag = {'.docx': 'document', '.xlsx': 'workbook', '.pptx': 'presentation'}[ext]
+                if root.tag.rsplit('}', 1)[-1] != tag:
+                    return FAIL, 'invalid Office main part'
+            return OK, "структура Office разбирается; визуальная приёмка отдельно (%d Б)" % size
 
         if ext == ".pdf":
             with io.open(path, "rb") as fh:
                 if fh.read(5) != b"%PDF-":
                     return FAIL, "нет сигнатуры %PDF-"
-            return OK, "PDF открывается (%d Б)" % size
+            return SKIP, "PDF signature only; render in a PDF viewer before acceptance (%d Б)" % size
 
         if ext == ".json":
             json.loads(read_text(path))
@@ -235,19 +280,20 @@ def check_obraz_section(body):
 
     # Секция — до следующего заголовка того же или более высокого уровня.
     rest = body[m.end() :]
-    nxt = re.search(r"^##\s+", rest, re.M)
+    depth = len(re.match(r"#+", m.group(0)).group(0))
+    nxt = re.search(r"^#{1,%d}\s+" % depth, rest, re.M)
     section = rest[: nxt.start()] if nxt else rest
 
     missing, empty = [], []
     for needle, human in OBRAZ_FIELDS:
         line = None
         for ln in section.split("\n"):
-            if needle.lower() in ln.lower():
+            if ':' in ln and needle.lower() in ln.split(':', 1)[0].lower():
                 line = ln
                 break
         if line is None:
             missing.append(human)
-        elif UNFILLED.search(line) or not re.sub(r"[^\w]", "", line.split(":")[-1]):
+        elif UNFILLED.search(line.split(':', 1)[1]) or not re.sub(r"[^\w]", "", line.split(":", 1)[1]):
             empty.append(human)
 
     if missing or empty:
@@ -294,7 +340,7 @@ def run_checks(runlog_path):
 
     # 2. Обязательные секции run-лога
     for section in ("## Бюджеты", "## Trace"):
-        present = section in body
+        present = bool(re.search(r'^' + re.escape(section) + r'[ \t]*$', body, re.M))
         checks.append(
             Check(
                 "секция %s" % section,
@@ -322,12 +368,13 @@ def run_checks(runlog_path):
             checks.append(Check("артефакт %s" % raw, st, detail))
 
     # 4. Модели: факт перевода на fable виден только здесь
-    models = sorted(set(re.findall(r"\b(?:claude-)?(fable-5|opus-5|opus-4-8|sonnet-5|haiku-4-5)\b", body)))
+    budget = re.search(r'^## Бюджеты[ \t]*\n(.*?)(?=^## |\Z)', body, re.M | re.S)
+    models = bool(budget and re.search(r'\b(?:Модель|model)\b', budget.group(1), re.I))
     checks.append(
         Check(
             "модели в ## Бюджеты",
             OK if models else SKIP,
-            ", ".join(models) if models else "колонка Модель не заполнена",
+            "budget model column present; verify actual usage separately" if models else "колонка Модель не заполнена",
         )
     )
 
@@ -335,6 +382,9 @@ def run_checks(runlog_path):
 
 
 def main():
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8')
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     as_json = "--json" in sys.argv[1:]
 
@@ -346,7 +396,12 @@ def main():
         print("нет такого run-лога: %s" % path, file=sys.stderr)
         return 2
 
-    run_id, status, checks = run_checks(path)
+    try:
+        run_id, status, checks = run_checks(path)
+    except (OSError, ValueError, UnicodeError) as exc:
+        payload = {'verdict_script': 'не принято', 'error': type(exc).__name__, 'detail': str(exc)}
+        print(json.dumps(payload, ensure_ascii=False) if as_json else payload['detail'])
+        return 2
 
     # Прогон в работе приёмке не подлежит: артефактов ещё нет по определению,
     # и «не принято» на нём — ложная тревога, а не находка. Гейт судит только

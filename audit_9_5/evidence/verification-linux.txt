@@ -1,0 +1,144 @@
+CHECK /usr/bin/python3 tools/agent-lint.py --quiet
+
+==============================================================
+проверено файлов: 51 | ОШИБОК: 0 | предупреждений: 53
+EXIT 0
+CHECK /usr/bin/python3 tools/gotovo-counter.py --selftest
+  ПРОЙДЕНО — заполненный распознан
+  ПРОЙДЕНО — пропуск распознан
+  ПРОЙДЕНО — отсутствие поля учтено как пропуск
+  ПРОЙДЕНО — мусорное значение помечено
+  ПРОЙДЕНО — прогон старше правила не считается
+
+SELFTEST: ПРОЙДЕН
+EXIT 0
+CHECK /usr/bin/python3 -m unittest discover -s tests -v
+test_block_artifacts (test_acceptance.AcceptanceTests.test_block_artifacts) ... ok
+test_corrupt_artifact_fails (test_acceptance.AcceptanceTests.test_corrupt_artifact_fails) ... ok
+test_cwd_cannot_supply_missing_artifact (test_acceptance.AcceptanceTests.test_cwd_cannot_supply_missing_artifact) ... ok
+test_duplicate_artifacts_rejected (test_acceptance.AcceptanceTests.test_duplicate_artifacts_rejected) ... ok
+test_duplicate_status_is_invalid (test_acceptance.AcceptanceTests.test_duplicate_status_is_invalid) ... ok
+test_fake_office_fails (test_acceptance.AcceptanceTests.test_fake_office_fails) ... ok
+test_higher_heading_ends_obraz (test_acceptance.AcceptanceTests.test_higher_heading_ends_obraz) ... ok
+test_invalid_utf8_fails (test_acceptance.AcceptanceTests.test_invalid_utf8_fails) ... ok
+test_label_without_value_fails (test_acceptance.AcceptanceTests.test_label_without_value_fails) ... ok
+test_missing_relative_artifact_fails (test_acceptance.AcceptanceTests.test_missing_relative_artifact_fails) ... ok
+test_missing_run_is_error (test_acceptance.AcceptanceTests.test_missing_run_is_error) ... ok
+test_pdf_signature_is_not_opening_proof (test_acceptance.AcceptanceTests.test_pdf_signature_is_not_opening_proof) ... ok
+test_placeholder_field_fails (test_acceptance.AcceptanceTests.test_placeholder_field_fails) ... ok
+test_planning_is_ineligible (test_acceptance.AcceptanceTests.test_planning_is_ineligible) ... ok
+test_quoted_comma_in_path (test_acceptance.AcceptanceTests.test_quoted_comma_in_path) ... ok
+test_quoted_status_with_comment (test_acceptance.AcceptanceTests.test_quoted_status_with_comment) ... ok
+test_valid_run (test_acceptance.AcceptanceTests.test_valid_run) ... ok
+test_archived_run_with_comment_is_found (test_acceptance_launch.LaunchTests.test_archived_run_with_comment_is_found) ... ok
+test_existing_lock_is_preserved (test_acceptance_launch.LaunchTests.test_existing_lock_is_preserved) ... ok
+test_reviewed_run_is_not_repeated (test_acceptance_launch.LaunchTests.test_reviewed_run_is_not_repeated) ... ok
+test_success_exit_without_report_is_failure (test_acceptance_launch.LaunchTests.test_success_exit_without_report_is_failure) ... ok
+test_timeout_releases_lock (test_acceptance_launch.LaunchTests.test_timeout_releases_lock) ... ok
+test_empty_stack_is_not_success (test_agent_lint.AgentLintTests.test_empty_stack_is_not_success) ... ok
+test_explicit_card_target (test_agent_lint.AgentLintTests.test_explicit_card_target) ... ok
+test_local_path_resolves_in_selected_stack (test_agent_lint.AgentLintTests.test_local_path_resolves_in_selected_stack) ... ok
+test_missing_bash_mutation (test_agent_lint.AgentLintTests.test_missing_bash_mutation) ... ok
+test_missing_contract_is_error (test_agent_lint.AgentLintTests.test_missing_contract_is_error) ... ok
+test_missing_dod_mutation (test_agent_lint.AgentLintTests.test_missing_dod_mutation) ... ok
+test_missing_frontmatter_mutation (test_agent_lint.AgentLintTests.test_missing_frontmatter_mutation) ... ok
+test_missing_name_mutation (test_agent_lint.AgentLintTests.test_missing_name_mutation) ... ok
+test_unknown_metadata_mutation (test_agent_lint.AgentLintTests.test_unknown_metadata_mutation) ... ok
+test_valid_card (test_agent_lint.AgentLintTests.test_valid_card) ... ok
+test_disabled_is_side_effect_free (test_export.ExportTests.test_disabled_is_side_effect_free) ... ok
+test_full_requires_explicit_mode (test_export.ExportTests.test_full_requires_explicit_mode) ... ok
+test_invalid_json_does_not_produce_export (test_export.ExportTests.test_invalid_json_does_not_produce_export) ... ok
+test_outside_transcript_root_is_rejected (test_export.ExportTests.test_outside_transcript_root_is_rejected) ... ok
+test_redacts_without_mutating_source (test_export.ExportTests.test_redacts_without_mutating_source) ... ok
+test_repeat_export_is_idempotent (test_export.ExportTests.test_repeat_export_is_idempotent) ... ok
+test_command_after_echo (test_guards.GuardTests.test_command_after_echo) ... ok
+test_edit_scans_new_content_only (test_guards.GuardTests.test_edit_scans_new_content_only) ... ok
+test_force_push_and_echo_differ (test_guards.GuardTests.test_force_push_and_echo_differ) ... ok
+test_http_data_is_a_write (test_guards.GuardTests.test_http_data_is_a_write) ... ok
+test_invalid_json_fails_closed_without_echo (test_guards.GuardTests.test_invalid_json_fails_closed_without_echo) ... ok
+test_json_escaping_is_decoded (test_guards.GuardTests.test_json_escaping_is_decoded) ... ok
+test_multiple_credential_families (test_guards.GuardTests.test_multiple_credential_families) ... ok
+test_powershell_wrapper_reads_stdin (test_guards.GuardTests.test_powershell_wrapper_reads_stdin) ... skipped 'PowerShell unavailable'
+test_quote_concatenation (test_guards.GuardTests.test_quote_concatenation) ... ok
+test_reordered_delete_flags (test_guards.GuardTests.test_reordered_delete_flags) ... ok
+test_safe_placeholder (test_guards.GuardTests.test_safe_placeholder) ... ok
+test_substitution_inside_echo_is_not_stripped (test_guards.GuardTests.test_substitution_inside_echo_is_not_stripped) ... ok
+test_ambiguous_or_traversing_clip_rejected (test_helpers.HelpersTests.test_ambiguous_or_traversing_clip_rejected) ... ok
+test_csv_cannot_overwrite_input (test_helpers.HelpersTests.test_csv_cannot_overwrite_input) ... ok
+test_csv_incompatible_schema_rejected_without_output (test_helpers.HelpersTests.test_csv_incompatible_schema_rejected_without_output) ... ok
+test_csv_missing_input_is_failure (test_helpers.HelpersTests.test_csv_missing_input_is_failure) ... ok
+test_csv_reordered_columns_align (test_helpers.HelpersTests.test_csv_reordered_columns_align) ... ok
+test_existing_video_output_is_preserved (test_helpers.HelpersTests.test_existing_video_output_is_preserved) ... ok
+test_invalid_edl_rejected (test_helpers.HelpersTests.test_invalid_edl_rejected) ... ok
+test_inventory_default_never_launches_external_tools (test_helpers.HelpersTests.test_inventory_default_never_launches_external_tools) ... [1/5] обход дерева /tmp/orchestrator-helpers-53fqr7fa …
+[2/5] символы, TODO …
+[3/5] инструменты (языки: []) …
+      · git
+[4/5] запись среза …
+[5/5] карта …
+/mnt/c/Users/kamil/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator/tools/repo-inventory/inventory.py:678: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/orchestrator-helpers-53fqr7fa/.inventory/00_MAP.md' mode='w' encoding='utf-8'>
+  open(os.path.join(outdir, "00_MAP.md"), "w", encoding="utf-8").write(mp)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+
+Готово за 0 c → /tmp/orchestrator-helpers-53fqr7fa/.inventory
+  00_MAP.md                3,314 Б  ≈    946 токенов
+  01_symbols.tsv              20 Б  ≈      5 токенов
+  02_findings.json           559 Б  ≈    159 токенов
+  03_hotspots.tsv             17 Б  ≈      4 токенов
+  04_todo.tsv                 15 Б  ≈      4 токенов
+  ИТОГО СРЕЗ               3,925 Б  ≈  1,121 токенов
+ok
+test_inventory_does_not_accept_stale_duplicate_report (test_helpers.HelpersTests.test_inventory_does_not_accept_stale_duplicate_report) ... ok
+test_inventory_failed_tools_never_report_zero_findings (test_helpers.HelpersTests.test_inventory_failed_tools_never_report_zero_findings) ... ok
+test_media_recipes_require_explicit_work_directory (test_helpers.HelpersTests.test_media_recipes_require_explicit_work_directory) ... ok
+test_powershell_is_counted_as_code (test_helpers.HelpersTests.test_powershell_is_counted_as_code) ... ok
+test_vulture_findings_exit_is_valid (test_helpers.HelpersTests.test_vulture_findings_exit_is_valid) ... /mnt/c/Users/kamil/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator/tools/repo-inventory/inventory.py:309: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/orchestrator-helpers-ywogfrdc/raw/vulture.txt' mode='w' encoding='utf-8'>
+  open(os.path.join(outdir, "raw", "vulture.txt"), "w", encoding="utf-8").write(out or "")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_clean_minimal_install_and_repeat (test_install.InstallTests.test_clean_minimal_install_and_repeat) ... ok
+test_dry_run_writes_nothing (test_install.InstallTests.test_dry_run_writes_nothing) ... ok
+test_existing_card_collision_leaves_target_unchanged (test_install.InstallTests.test_existing_card_collision_leaves_target_unchanged) ... ok
+test_malformed_settings_fail_preflight (test_install.InstallTests.test_malformed_settings_fail_preflight) ... ok
+test_paths_are_exec_arguments_without_shell (test_install.InstallTests.test_paths_are_exec_arguments_without_shell) ... ok
+test_settings_merge_preserves_permissions_and_hooks (test_install.InstallTests.test_settings_merge_preserves_permissions_and_hooks) ... ok
+test_vault_collision_is_found_before_stack_writes (test_install.InstallTests.test_vault_collision_is_found_before_stack_writes) ... ok
+test_good_index_passes (test_pre_commit.PreCommitTests.test_good_index_passes) ... 
+==============================================================
+проверено файлов: 4 | ОШИБОК: 0 | предупреждений: 1
+ok
+test_staged_secret_is_rejected (test_pre_commit.PreCommitTests.test_staged_secret_is_rejected) ... ok
+test_unstaged_fix_cannot_hide_broken_index (test_pre_commit.PreCommitTests.test_unstaged_fix_cannot_hide_broken_index) ... 
+sample.md
+   ОШИБКА  нужен Bash (обязанность: 'посчитай'), но во frontmatter его нет
+
+==============================================================
+проверено файлов: 4 | ОШИБОК: 1 | предупреждений: 1
+Файл с ОШИБКОЙ не должен уезжать в мост — агент выдаст правдоподобный результат
+ok
+test_added_then_removed_private_file_cannot_leave_in_history (test_sync.SyncTests.test_added_then_removed_private_file_cannot_leave_in_history) ... ok
+test_allowlist_cannot_escape_root (test_sync.SyncTests.test_allowlist_cannot_escape_root) ... ok
+test_commit_failure_is_observable (test_sync.SyncTests.test_commit_failure_is_observable) ... ok
+test_credential_blocks_before_staging (test_sync.SyncTests.test_credential_blocks_before_staging) ... ok
+test_existing_index_is_preserved (test_sync.SyncTests.test_existing_index_is_preserved) ... ok
+test_failed_push_is_observable (test_sync.SyncTests.test_failed_push_is_observable) ... ok
+test_idempotent_clean_sync (test_sync.SyncTests.test_idempotent_clean_sync) ... ok
+test_index_lock_blocks_without_removing_it (test_sync.SyncTests.test_index_lock_blocks_without_removing_it) ... ok
+test_network_failure_is_not_success (test_sync.SyncTests.test_network_failure_is_not_success) ... ok
+test_removed_credential_in_allowed_file_still_blocks_history (test_sync.SyncTests.test_removed_credential_in_allowed_file_still_blocks_history) ... ok
+test_sync_lock_blocks_second_caller (test_sync.SyncTests.test_sync_lock_blocks_second_caller) ... ok
+test_unknown_secret_file_remains_untracked (test_sync.SyncTests.test_unknown_secret_file_remains_untracked) ... ok
+test_wrong_branch_is_rejected (test_sync.SyncTests.test_wrong_branch_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 86 tests in 15.206s
+
+OK (skipped=1)
+pre-commit: credential/private-path finding; run tools/secret_scan.py --staged
+EXIT 0
+CHECK /usr/bin/python3 tools/secret_scan.py --root /mnt/c/Users/kamil/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator
+{
+  "layer": "heuristic",
+  "findings": []
+}
+EXIT 0

@@ -21,20 +21,20 @@
 Запуск:
     py -3 ~/.claude/tools/agent-lint.py             # все карточки + _shared
     py -3 ~/.claude/tools/agent-lint.py --quiet     # только ошибки
-    py -3 ~/.claude/tools/agent-lint.py --selftest  # проверка на бэкапах: линтер обязан краснеть
+    py -3 ~/.claude/tools/agent-lint.py --selftest  # синтетические негативные регрессии, без приватных бэкапов
     py -3 ~/.claude/tools/agent-lint.py <файл>...
 
 Код возврата: 0 — чисто; 1 — есть ОШИБКИ. Предупреждения код возврата не меняют.
 
-Пути: каталог стека — из переменной окружения CLAUDE_HOME (по умолчанию ~/.claude),
+Пути: каталог стека — из переменной окружения CLAUDE_HOME (по умолчанию корень checkout),
 корень vault — из VAULT_ROOT (по умолчанию ~/vault).
 """
-import os, re, sys, glob, collections
+import os, re, sys, glob, collections, subprocess
 
 sys.stdout.reconfigure(encoding="utf-8")
 
 HOME = os.path.expanduser("~")
-STACK = os.environ.get("CLAUDE_HOME") or os.path.join(HOME, ".claude")
+STACK = os.path.abspath(os.environ.get("CLAUDE_HOME") or os.path.dirname(os.path.dirname(__file__)))
 AG = os.path.join(STACK, "agents")
 
 # Vault на разных машинах лежит по-разному, а его копия может быть неполной. Жёстко
@@ -54,18 +54,26 @@ _CANON_ROOTS = [os.path.join(STACK, d)
 
 
 def in_stack(resolved):
-    r = os.path.normcase(resolved)
-    return any(r.startswith(os.path.normcase(x)) for x in _CANON_ROOTS)
+    r = os.path.normcase(os.path.abspath(resolved))
+    return r == os.path.normcase(STACK) or any(
+        r == os.path.normcase(x) or r.startswith(os.path.normcase(x) + os.sep)
+        for x in _CANON_ROOTS)
 
 QUIET = "--quiet" in sys.argv
 SELFTEST = "--selftest" in sys.argv
 targets = [a for a in sys.argv[1:] if not a.startswith("--")]
 
 if SELFTEST:
-    files = sorted(glob.glob(os.path.join(AG, "*.md.bak-*")))
-else:
-    files = targets or (sorted(glob.glob(os.path.join(AG, "*.md")))
-                        + sorted(glob.glob(os.path.join(AG, "_shared", "**", "*.md"), recursive=True)))
+    test = os.path.join(STACK, "tests", "test_agent_lint.py")
+    if not os.path.isfile(test):
+        print("SELFTEST unavailable: install tests/test_agent_lint.py", file=sys.stderr)
+        sys.exit(2)
+    sys.exit(subprocess.call([sys.executable, test]))
+files = targets or (sorted(glob.glob(os.path.join(AG, "*.md")))
+                    + sorted(glob.glob(os.path.join(AG, "_shared", "**", "*.md"), recursive=True)))
+if not files or any(not os.path.isfile(f) for f in files):
+    print("agent-lint: no cards or missing input file; NOT CHECKED", file=sys.stderr)
+    sys.exit(2)
 
 KNOWN = {os.path.basename(f)[:-3] for f in glob.glob(os.path.join(AG, "*.md"))}
 
@@ -115,6 +123,9 @@ def _canon_enum(pat):
 
 
 CANON_META = _canon_enum(r"type: <(brief\|[^>]*)>")
+if not CANON_META:
+    print("agent-lint: communication contract missing or invalid; NOT CHECKED", file=sys.stderr)
+    sys.exit(2)
 
 # Структурные шаблоны поломки пути. Ищутся по ВСЕМУ тексту файла, включая код-блоки,
 # и не зависят от того, сумели ли мы распознать строку как путь.
@@ -134,6 +145,8 @@ def strip_shared(body):
 def resolve(p):
     q = p.strip().rstrip(".,;:)»`")
     q = q.replace("~/vault", VAULT)
+    if q == "~/.claude" or q.startswith("~/.claude/"):
+        q = os.path.join(STACK, q[len("~/.claude"):].lstrip("/"))
     if q.startswith("~/"):
         q = os.path.join(HOME, q[2:])
     return q.replace("/", os.sep)
@@ -225,7 +238,7 @@ for f in files:
     def _same_dir(a, b):
         return os.path.normcase(os.path.abspath(a)) == os.path.normcase(os.path.abspath(b))
 
-    is_card = fm is not None and _same_dir(os.path.dirname(f) or ".", AG)
+    is_card = _same_dir(os.path.dirname(f) or ".", AG) or (bool(targets) and fm is not None)
 
     front = fm.group(1) if fm else ""
     body = t[fm.end():] if fm else t
@@ -254,6 +267,10 @@ for f in files:
     if not is_card:
         continue
 
+    if fm is None:
+        E("нет корректного YAML frontmatter карточки")
+        continue
+
     def fv(k):
         m = re.search(r"^%s:\s*(.+)$" % k, front, re.M)
         return m.group(1).strip() if m else None
@@ -262,6 +279,11 @@ for f in files:
     tools_raw = fv("tools")
     inherits = tools_raw is None or tools_raw.strip() in ("*", "all")
     tools = set() if inherits else {x.strip() for x in tools_raw.split(",")}
+
+    if not name:
+        E("нет обязательного name")
+    if not fv("description"):
+        E("нет обязательного description")
 
     if name and name != os.path.basename(n)[:-3]:
         E("frontmatter name=%r не совпадает с именем файла" % name)
@@ -371,6 +393,10 @@ if os.path.isdir(HOOKS):
         code = re.sub(r"(?m)^\s*#.*$", "", raw)
         reads_stdin = any(s in code for s in
                           ("Console]::In", "OpenStandardInput", "$input"))
+        if "'run-guard.ps1'" in code and os.path.isfile(os.path.join(HOOKS, 'run-guard.ps1')):
+            runner = open(os.path.join(HOOKS, 'run-guard.ps1'), encoding='utf-8-sig').read()
+            runner = re.sub(r'(?m)^\s*#.*$', '', runner)
+            reads_stdin = 'OpenStandardInput' in runner
         if os.path.basename(hp).endswith("-guard.ps1") and not reads_stdin:
             errors[hn].append(
                 "хук-сторож не читает stdin ([Console]::In) — payload Claude Code до него "
@@ -395,14 +421,6 @@ for n in sorted(set(list(errors) + list(warns))):
 
 print("\n%s" % ("=" * 62))
 print("проверено файлов: %d | ОШИБОК: %d | предупреждений: %d" % (len(files), ne, nw))
-
-if SELFTEST:
-    # Мутационная проверка: на бэкапах ДО правок линтер обязан находить то,
-    # ради чего написан. Зелень на них означала бы, что он не проверяет ничего.
-    ok = ne >= 20
-    print("\nSELFTEST на бэкапах .bak-9of10-20260821: %s (ожидалось ≥20 ошибок, найдено %d)"
-          % ("ПРОЙДЕН" if ok else "ПРОВАЛЕН — линтер не краснеет там, где должен", ne))
-    sys.exit(0 if ok else 1)
 
 if ne:
     print("Файл с ОШИБКОЙ не должен уезжать в мост — агент выдаст правдоподобный результат")

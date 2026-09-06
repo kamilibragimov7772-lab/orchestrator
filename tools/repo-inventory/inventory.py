@@ -2,11 +2,11 @@
 """
 repo-inventory — Слой 1 регламента ревью больших проектов.
 
-Проходит КАЖДУЮ строку проекта детерминированно и кладёт на диск компактный срез,
-который потом читает модель вместо самого кода.
+Считает доступные файлы и строит индекс. Это инвентаризация, не семантическое ревью.
+Внешние анализаторы запускаются только с --external-tools.
 
 Запуск:
-    python3 ~/.claude/tools/repo-inventory/inventory.py <путь-к-проекту> [--out DIR] [--full]
+    python3 ~/.claude/tools/repo-inventory/inventory.py <путь-к-проекту> [--out DIR] [--external-tools]
 
 Выход (в <out>/, по умолчанию <проект>/.inventory/):
     00_MAP.md          — карта проекта для человека и модели (главный вход)
@@ -27,6 +27,7 @@ import shutil
 import subprocess
 import sys
 import time
+import tempfile
 from collections import Counter, defaultdict
 
 # ---------------------------------------------------------------- конфигурация
@@ -50,7 +51,7 @@ CODE_EXT = {
     ".cjs": "js", ".py": "py", ".go": "go", ".rs": "rs", ".rb": "rb",
     ".php": "php", ".java": "java", ".kt": "kt", ".sh": "sh", ".sql": "sql",
     ".css": "css", ".scss": "css", ".prisma": "prisma", ".vue": "vue",
-    ".svelte": "svelte",
+    ".svelte": "svelte", ".ps1": "powershell", ".vbs": "vbscript", ".html": "html",
 }
 DOC_EXT = {".md", ".mdx", ".rst", ".txt", ".adoc"}
 CONF_EXT = {".json", ".yml", ".yaml", ".toml", ".ini", ".cfg", ".env", ".xml"}
@@ -101,7 +102,7 @@ def run(cmd, cwd=None, timeout=900, env=None):
     """Запускает команду, возвращает (rc, stdout, stderr). Не падает."""
     try:
         p = subprocess.run(
-            cmd, cwd=cwd, timeout=timeout, capture_output=True, text=True,
+            cmd, cwd=cwd, timeout=timeout, capture_output=True, text=True, encoding="utf-8", errors="replace",
             env=env or os.environ.copy(),
         )
         return p.returncode, p.stdout, p.stderr
@@ -123,10 +124,12 @@ def walk(root):
     """Возвращает список записей о файлах. Проходит всё, ничего не читая целиком."""
     entries = []
     for dp, dn, fn in os.walk(root):
-        dn[:] = sorted(d for d in dn if d not in PRUNE_DIRS)
+        dn[:] = sorted(d for d in dn if d not in PRUNE_DIRS and not os.path.islink(os.path.join(dp, d)))
         rel_dir = os.path.relpath(dp, root)
         for f in sorted(fn):
             path = os.path.join(dp, f)
+            if os.path.islink(path):
+                continue  # do not read symlink targets outside the requested tree
             rel = os.path.relpath(path, root)
             ext = os.path.splitext(f)[1].lower()
             try:
@@ -155,8 +158,7 @@ def walk(root):
 
 
 def count_lines(entries):
-    """Считает строки и непустые строки. Читает каждый текстовый файл — это и есть
-    «прошли каждую строчку», только инструментом, а не моделью."""
+    """Counts readable text. Reading bytes is not semantic or security review."""
     for e in entries:
         if e["kind"] in ("bin", "log") or e["size"] > 5_000_000:
             e["lines"] = 0
@@ -167,6 +169,7 @@ def count_lines(entries):
                 data = fh.read()
         except OSError:
             e["lines"] = e["sloc"] = 0
+            e["read_error"] = True
             continue
         if b"\0" in data[:4096]:
             e["kind"] = "bin"
@@ -239,8 +242,7 @@ def tool_jscpd(root, outdir, langs):
     """Дубли кода. Копипаста ≥50 токенов в ≥5 строк."""
     if not (langs & {"ts", "js", "py", "css"}):
         return None
-    rep = os.path.join(outdir, "raw", "jscpd")
-    os.makedirs(rep, exist_ok=True)
+    rep = tempfile.mkdtemp(prefix="jscpd-", dir=os.path.join(outdir, "raw"))
     ignore = (",".join(f"**/{d}/**" for d in sorted(PRUNE_DIRS))
               + ",**/*.bak*/**,**/*.min.js,**/data/**,**/logs/**,**/*.xml,"
                 "**/_cache/**,**/*cache*/**,**/public/**,**/static/**")
@@ -250,11 +252,14 @@ def tool_jscpd(root, outdir, langs):
         "--reporters", "json", "--output", rep,
         "--ignore", ignore, "--silent",
     ], timeout=900)
+    if rc != 0:
+        return {"error": f"jscpd exited {rc}; result not accepted"}
     j = os.path.join(rep, "jscpd-report.json")
     if not os.path.exists(j):
         return {"error": err.strip()[:200] or f"rc={rc}"}
     try:
-        data = json.load(open(j))
+        with open(j, encoding="utf-8") as stream:
+            data = json.load(stream)
     except Exception as e:  # noqa: BLE001
         return {"error": str(e)}
     st = data.get("statistics", {}).get("total", {})
@@ -281,11 +286,13 @@ def tool_ruff(root, outdir):
     rc, out, _ = run(["ruff", "check", root, "--output-format", "json",
                       "--select", "F,E,W,I,UP,B,SIM,ARG,ERA,PLR", "--exit-zero",
                       "--no-cache"], timeout=600)
+    if rc != 0 or not out.strip():
+        return {"error": f"ruff exited {rc} or returned no JSON"}
     try:
-        items = json.loads(out or "[]")
+        items = json.loads(out)
     except Exception:
         return {"error": "parse"}
-    open(os.path.join(outdir, "raw", "ruff.json"), "w").write(out or "[]")
+    open(os.path.join(outdir, "raw", "ruff.json"), "w", encoding="utf-8").write(out or "[]")
     codes = Counter(i.get("code") or "?" for i in items)
     fixable = sum(1 for i in items if i.get("fix"))
     return {"total": len(items), "fixable": fixable, "by_code": codes.most_common(25)}
@@ -297,7 +304,9 @@ def tool_vulture(root, outdir):
     excl = ",".join(f"*/{d}/*" for d in sorted(PRUNE_DIRS)) + ",*.bak*"
     rc, out, _ = run(["vulture", root, "--min-confidence", "80", "--exclude", excl],
                      timeout=600)
-    open(os.path.join(outdir, "raw", "vulture.txt"), "w").write(out or "")
+    if rc not in (0, 3):
+        return {"error": f"vulture exited {rc}; result not accepted"}
+    open(os.path.join(outdir, "raw", "vulture.txt"), "w", encoding="utf-8").write(out or "")
     lines = [ln.replace(root + "/", "") for ln in (out or "").splitlines() if ln.strip()]
     src = [ln for ln in lines if not TEST_RE.search(ln.split(":")[0])]
     return {"total": len(lines), "in_src": len(src), "sample": src[:40] or lines[:40]}
@@ -308,6 +317,8 @@ def tool_knip(root, outdir):
         return None
     rc, out, err = run(["npx", "--yes", "knip@5", "--reporter", "json",
                         "--no-exit-code"], cwd=root, timeout=900)
+    if rc != 0:
+        return {"error": f"knip exited {rc}; result not accepted"}
     body = out.strip()
     start = body.find("{")
     if start == -1:
@@ -316,7 +327,7 @@ def tool_knip(root, outdir):
         data = json.loads(body[start:])
     except Exception:
         return {"error": "parse"}
-    open(os.path.join(outdir, "raw", "knip.json"), "w").write(json.dumps(data)[:2_000_000])
+    open(os.path.join(outdir, "raw", "knip.json"), "w", encoding="utf-8").write(json.dumps(data)[:2_000_000])
     files = data.get("files", [])
     issues = data.get("issues", [])
     agg = Counter()
@@ -333,11 +344,13 @@ def tool_radon(root, outdir, langs):
         return None
     rc, out, _ = run(["radon", "cc", root, "-j", "--min", "C",
                       "-e", "*/.venv/*,*/node_modules/*,*.bak*/*"], timeout=600)
+    if rc != 0 or not out.strip():
+        return {"error": f"radon exited {rc} or returned no JSON"}
     try:
-        data = json.loads(out or "{}")
+        data = json.loads(out)
     except Exception:
         return {"error": "parse"}
-    open(os.path.join(outdir, "raw", "radon_cc.json"), "w").write(out or "{}")
+    open(os.path.join(outdir, "raw", "radon_cc.json"), "w", encoding="utf-8").write(out or "{}")
     worst = []
     for f, items in data.items():
         if not isinstance(items, list):
@@ -351,10 +364,12 @@ def tool_radon(root, outdir, langs):
 
 
 def tool_git_churn(root, outdir):
-    if not os.path.isdir(os.path.join(root, ".git")):
+    if not os.path.exists(os.path.join(root, ".git")):
         return {"error": "не git-репозиторий"}
     rc, out, _ = run(["git", "log", "--since=12.months", "--pretty=format:%H",
                       "--numstat"], cwd=root, timeout=300)
+    if rc != 0:
+        return {"error": f"git log exited {rc}; result not accepted"}
     churn = Counter()
     commits = 0
     for ln in out.splitlines():
@@ -367,7 +382,7 @@ def tool_git_churn(root, outdir):
                 churn[f] += int(a) + int(d)
         else:
             commits += 1
-    open(os.path.join(outdir, "raw", "git_churn.tsv"), "w").write(
+    open(os.path.join(outdir, "raw", "git_churn.tsv"), "w", encoding="utf-8").write(
         "\n".join(f"{v}\t{k}" for k, v in churn.most_common())
     )
     return {"commits_12m": commits, "top": churn.most_common(30)}
@@ -435,19 +450,19 @@ def build_map(root, entries, symbols, dup_symbols, todos, findings, outdir, elap
         a("> Первое действие ревью: увести копии из рабочего дерева "
           "(в git-историю или в `_archive/` вне корня сборки).")
         a("")
-    a("## 1а. Доказательство покрытия (сверка множеств)")
+    a("## 1а. Покрытие инвентаризации (не семантического ревью)")
     a("")
     a("Каждый файл дерева попал ровно в одну корзину. Сумма корзин = общему числу файлов —")
-    a("это и есть проверяемое «ничего не пропущено», а не обещание.")
+    a("Симлинки и каталоги из списка исключений не обходятся; ошибки чтения отмечаются отдельно.")
     a("")
     a("| Корзина | Файлов | Строк | Чем пройдено |")
     a("|---|---|---|---|")
     buckets = [
-        ("тесты", [e for e in code if TEST_RE.search(e["rel"].replace(os.sep, "/"))], "линтер + jscpd + индекс символов"),
-        ("рабочий код", [e for e in code], "jscpd + линтер + детектор мёртвого кода + индекс символов"),
+        ("тесты", [e for e in code if TEST_RE.search(e["rel"].replace(os.sep, "/"))], "счётчик строк + доступные регулярки символов"),
+        ("рабочий код", [e for e in code], "счётчик строк + доступные регулярки символов"),
         ("копии/бэкапы", backup, "посчитаны, из анализа исключены (см. врезку)"),
         ("вендор-библиотеки", vendor, "посчитаны, из анализа исключены"),
-        ("документация", docs, "jscpd (дубли текста), счётчик строк"),
+        ("документация", docs, "счётчик строк; смысл и дубли текста не проверены"),
         ("конфиги", [e for e in entries if e["kind"] == "conf"], "счётчик строк, чтение по требованию"),
         ("логи и данные", [e for e in entries if e["kind"] == "log"], "только размер, содержимое не читается"),
         ("бинарники и медиа", [e for e in entries if e["kind"] == "bin"], "только размер"),
@@ -502,6 +517,12 @@ def build_map(root, entries, symbols, dup_symbols, todos, findings, outdir, elap
         a("")
     a("## 5. Находки инструментов")
     a("")
+    a("| Инструмент | Фактический результат |")
+    a("|---|---|")
+    for name, result in findings.items():
+        a(f"| {name} | {result.get('error', 'выполнен')} |")
+    a("")
+    a(f"Ошибок чтения: {sum(bool(e.get('read_error')) for e in entries)}")
     d = findings.get("duplicates")
     if d and "error" not in d:
         a(f"### Копипаста (jscpd, ≥50 токенов / ≥5 строк)")
@@ -581,16 +602,23 @@ def build_map(root, entries, symbols, dup_symbols, todos, findings, outdir, elap
 
 def main():
     ap = argparse.ArgumentParser()
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"): stream.reconfigure(encoding="utf-8")
     ap.add_argument("root")
+    ap.add_argument("--external-tools", action="store_true", help="May download and run jscpd/knip through npx; review target configuration first")
     ap.add_argument("--out", default=None)
     ap.add_argument("--skip", default="", help="через запятую: jscpd,knip,ruff,vulture,radon,git")
     args = ap.parse_args()
 
     t0 = time.time()
     root = os.path.abspath(args.root)
+    if not os.path.isdir(root):
+        ap.error("root directory does not exist")
     outdir = os.path.abspath(args.out or os.path.join(root, ".inventory"))
     os.makedirs(os.path.join(outdir, "raw"), exist_ok=True)
     skip = {s.strip() for s in args.skip.split(",") if s.strip()}
+
+    if "jscpd" in skip: skip.add("duplicates")
 
     print(f"[1/5] обход дерева {root} …", file=sys.stderr)
     entries = count_lines(walk(root))
@@ -610,28 +638,28 @@ def main():
         ("radon", lambda: tool_radon(root, outdir, langs)),
         ("git", lambda: tool_git_churn(root, outdir)),
     ]:
-        if name in skip:
+        if name in skip or (name != "git" and not args.external_tools):
+            findings[name] = {"error": "SKIP: not requested"}
             continue
         print(f"      · {name}", file=sys.stderr)
         res = fn()
-        if res is not None:
-            findings[name] = res
+        findings[name] = res if res is not None else {"error": "SKIP: unavailable or not applicable"}
 
     print("[4/5] запись среза …", file=sys.stderr)
-    with open(os.path.join(outdir, "01_symbols.tsv"), "w") as fh:
+    with open(os.path.join(outdir, "01_symbols.tsv"), "w", encoding="utf-8") as fh:
         fh.write("file\tline\tkind\tname\n")
         for rel, ln, kind, name in symbols:
             fh.write(f"{rel}\t{ln}\t{kind}\t{name}\n")
-    with open(os.path.join(outdir, "04_todo.tsv"), "w") as fh:
+    with open(os.path.join(outdir, "04_todo.tsv"), "w", encoding="utf-8") as fh:
         fh.write("file\tline\ttext\n")
         for rel, ln, txt in todos:
             fh.write(f"{rel}\t{ln}\t{txt}\n")
     g = findings.get("git") or {}
-    with open(os.path.join(outdir, "03_hotspots.tsv"), "w") as fh:
+    with open(os.path.join(outdir, "03_hotspots.tsv"), "w", encoding="utf-8") as fh:
         fh.write("churn_lines\tfile\n")
         for f, n in (g.get("top") or []):
             fh.write(f"{n}\t{f}\n")
-    with open(os.path.join(outdir, "02_findings.json"), "w") as fh:
+    with open(os.path.join(outdir, "02_findings.json"), "w", encoding="utf-8") as fh:
         json.dump({
             "root": root,
             "generated": time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -647,7 +675,7 @@ def main():
 
     print("[5/5] карта …", file=sys.stderr)
     mp = build_map(root, entries, symbols, dup_symbols, todos, findings, outdir, time.time() - t0)
-    open(os.path.join(outdir, "00_MAP.md"), "w").write(mp)
+    open(os.path.join(outdir, "00_MAP.md"), "w", encoding="utf-8").write(mp)
 
     sizes = {f: os.path.getsize(os.path.join(outdir, f))
              for f in ("00_MAP.md", "01_symbols.tsv", "02_findings.json",
@@ -658,6 +686,9 @@ def main():
     print(f"  {'ИТОГО СРЕЗ':20} {sum(sizes.values()):>9,} Б  "
           f"≈{int(sum(sizes.values()) / CHARS_PER_TOKEN):>7,} токенов", file=sys.stderr)
 
+    failed = any("error" in v and not v["error"].startswith("SKIP:") for v in findings.values())
+    return int(failed or any(e.get("read_error") for e in entries))
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
