@@ -5,7 +5,7 @@
       "status": "installed",
       "mode": "minimal",
       "new_files": 64,
-      "destination": "C:\\Users\\kamil\\Documents\\Codex\\2026-09-06\\new-chat-2\\work\\clean-install-final\\minimal\\stack",
+      "destination": "C:\\Users\\<user>\\Documents\\Codex\\2026-09-06\\new-chat-2\\work\\clean-install-final\\minimal\\stack",
       "next": "Run doctor.py --installed before using agents. Optional plugins and models require separate setup."
     },
     "doctor_pass": true,
@@ -91,7 +91,7 @@
       "status": "installed",
       "mode": "full",
       "new_files": 137,
-      "destination": "C:\\Users\\kamil\\Documents\\Codex\\2026-09-06\\new-chat-2\\work\\clean-install-final\\full\\stack",
+      "destination": "C:\\Users\\<user>\\Documents\\Codex\\2026-09-06\\new-chat-2\\work\\clean-install-final\\full\\stack",
       "next": "Run doctor.py --installed before using agents. Optional plugins and models require separate setup."
     },
     "doctor_pass": true,

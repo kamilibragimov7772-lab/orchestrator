@@ -76,7 +76,7 @@ test_inventory_default_never_launches_external_tools (test_helpers.HelpersTests.
       · git
 [4/5] запись среза …
 [5/5] карта …
-/mnt/c/Users/kamil/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator/tools/repo-inventory/inventory.py:678: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/orchestrator-helpers-53fqr7fa/.inventory/00_MAP.md' mode='w' encoding='utf-8'>
+/mnt/c/Users/<user>/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator/tools/repo-inventory/inventory.py:678: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/orchestrator-helpers-53fqr7fa/.inventory/00_MAP.md' mode='w' encoding='utf-8'>
   open(os.path.join(outdir, "00_MAP.md"), "w", encoding="utf-8").write(mp)
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
 
@@ -92,7 +92,7 @@ test_inventory_does_not_accept_stale_duplicate_report (test_helpers.HelpersTests
 test_inventory_failed_tools_never_report_zero_findings (test_helpers.HelpersTests.test_inventory_failed_tools_never_report_zero_findings) ... ok
 test_media_recipes_require_explicit_work_directory (test_helpers.HelpersTests.test_media_recipes_require_explicit_work_directory) ... ok
 test_powershell_is_counted_as_code (test_helpers.HelpersTests.test_powershell_is_counted_as_code) ... ok
-test_vulture_findings_exit_is_valid (test_helpers.HelpersTests.test_vulture_findings_exit_is_valid) ... /mnt/c/Users/kamil/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator/tools/repo-inventory/inventory.py:309: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/orchestrator-helpers-ywogfrdc/raw/vulture.txt' mode='w' encoding='utf-8'>
+test_vulture_findings_exit_is_valid (test_helpers.HelpersTests.test_vulture_findings_exit_is_valid) ... /mnt/c/Users/<user>/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator/tools/repo-inventory/inventory.py:309: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/orchestrator-helpers-ywogfrdc/raw/vulture.txt' mode='w' encoding='utf-8'>
   open(os.path.join(outdir, "raw", "vulture.txt"), "w", encoding="utf-8").write(out or "")
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
 ok
@@ -136,7 +136,7 @@ Ran 86 tests in 15.206s
 OK (skipped=1)
 pre-commit: credential/private-path finding; run tools/secret_scan.py --staged
 EXIT 0
-CHECK /usr/bin/python3 tools/secret_scan.py --root /mnt/c/Users/kamil/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator
+CHECK /usr/bin/python3 tools/secret_scan.py --root /mnt/c/Users/<user>/Documents/Codex/2026-09-06/new-chat-2/work/orchestrator
 {
   "layer": "heuristic",
   "findings": []

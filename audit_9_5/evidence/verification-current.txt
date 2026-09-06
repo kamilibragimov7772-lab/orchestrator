@@ -1,9 +1,9 @@
-CHECK C:\Users\kamil\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe tools/agent-lint.py --quiet
+CHECK C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe tools/agent-lint.py --quiet
 
 ==============================================================
 проверено файлов: 51 | ОШИБОК: 0 | предупреждений: 17
 EXIT 0
-CHECK C:\Users\kamil\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe tools/gotovo-counter.py --selftest
+CHECK C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe tools/gotovo-counter.py --selftest
   ПРОЙДЕНО — заполненный распознан
   ПРОЙДЕНО — пропуск распознан
   ПРОЙДЕНО — отсутствие поля учтено как пропуск
@@ -12,7 +12,7 @@ CHECK C:\Users\kamil\.cache\codex-runtimes\codex-primary-runtime\dependencies\py
 
 SELFTEST: ПРОЙДЕН
 EXIT 0
-CHECK C:\Users\kamil\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m unittest discover -s tests -v
+CHECK C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m unittest discover -s tests -v
 test_block_artifacts (test_acceptance.AcceptanceTests.test_block_artifacts) ... ok
 test_corrupt_artifact_fails (test_acceptance.AcceptanceTests.test_corrupt_artifact_fails) ... ok
 test_cwd_cannot_supply_missing_artifact (test_acceptance.AcceptanceTests.test_cwd_cannot_supply_missing_artifact) ... ok
@@ -70,17 +70,17 @@ test_csv_missing_input_is_failure (test_helpers.HelpersTests.test_csv_missing_in
 test_csv_reordered_columns_align (test_helpers.HelpersTests.test_csv_reordered_columns_align) ... ok
 test_existing_video_output_is_preserved (test_helpers.HelpersTests.test_existing_video_output_is_preserved) ... ok
 test_invalid_edl_rejected (test_helpers.HelpersTests.test_invalid_edl_rejected) ... ok
-test_inventory_default_never_launches_external_tools (test_helpers.HelpersTests.test_inventory_default_never_launches_external_tools) ... [1/5] обход дерева C:\Users\kamil\AppData\Local\Temp\orchestrator-helpers-mwx2ok_i …
+test_inventory_default_never_launches_external_tools (test_helpers.HelpersTests.test_inventory_default_never_launches_external_tools) ... [1/5] обход дерева C:\Users\<user>\AppData\Local\Temp\orchestrator-helpers-mwx2ok_i …
 [2/5] символы, TODO …
 [3/5] инструменты (языки: []) …
       · git
 [4/5] запись среза …
 [5/5] карта …
-<CHECKOUT>\tools\repo-inventory\inventory.py:678: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\kamil\\AppData\\Local\\Temp\\orchestrator-helpers-mwx2ok_i\\.inventory\\00_MAP.md' mode='w' encoding='utf-8'>
+<CHECKOUT>\tools\repo-inventory\inventory.py:678: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\<user>\\AppData\\Local\\Temp\\orchestrator-helpers-mwx2ok_i\\.inventory\\00_MAP.md' mode='w' encoding='utf-8'>
   open(os.path.join(outdir, "00_MAP.md"), "w", encoding="utf-8").write(mp)
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
 
-Готово за 0 c → C:\Users\kamil\AppData\Local\Temp\orchestrator-helpers-mwx2ok_i\.inventory
+Готово за 0 c → C:\Users\<user>\AppData\Local\Temp\orchestrator-helpers-mwx2ok_i\.inventory
   00_MAP.md                3,411 Б  ≈    974 токенов
   01_symbols.tsv              21 Б  ≈      6 токенов
   02_findings.json           624 Б  ≈    178 токенов
@@ -92,7 +92,7 @@ test_inventory_does_not_accept_stale_duplicate_report (test_helpers.HelpersTests
 test_inventory_failed_tools_never_report_zero_findings (test_helpers.HelpersTests.test_inventory_failed_tools_never_report_zero_findings) ... ok
 test_media_recipes_require_explicit_work_directory (test_helpers.HelpersTests.test_media_recipes_require_explicit_work_directory) ... ok
 test_powershell_is_counted_as_code (test_helpers.HelpersTests.test_powershell_is_counted_as_code) ... ok
-test_vulture_findings_exit_is_valid (test_helpers.HelpersTests.test_vulture_findings_exit_is_valid) ... <CHECKOUT>\tools\repo-inventory\inventory.py:309: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\kamil\\AppData\\Local\\Temp\\orchestrator-helpers-uwcsibmn\\raw\\vulture.txt' mode='w' encoding='utf-8'>
+test_vulture_findings_exit_is_valid (test_helpers.HelpersTests.test_vulture_findings_exit_is_valid) ... <CHECKOUT>\tools\repo-inventory\inventory.py:309: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\<user>\\AppData\\Local\\Temp\\orchestrator-helpers-uwcsibmn\\raw\\vulture.txt' mode='w' encoding='utf-8'>
   open(os.path.join(outdir, "raw", "vulture.txt"), "w", encoding="utf-8").write(out or "")
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
 ok
@@ -136,7 +136,7 @@ Ran 86 tests in 26.223s
 OK
 pre-commit: credential/private-path finding; run tools/secret_scan.py --staged
 EXIT 0
-CHECK C:\Users\kamil\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe tools/secret_scan.py --root <CHECKOUT>
+CHECK C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe tools/secret_scan.py --root <CHECKOUT>
 {
   "layer": "heuristic",
   "findings": []
