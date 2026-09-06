@@ -4,6 +4,7 @@ Only pattern types and paths are reported; matching values never leave this modu
 """
 import argparse
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -40,15 +41,17 @@ def private_path(path):
             or '.bak-' in p.name or any(x in {'sessions', 'backups', 'vault', '.obsidian'} for x in p.parts))
 
 
-def scan_repo(root, staged=False):
-    args = ['git', '-C', str(root), 'diff', '--cached', '--name-only', '--diff-filter=ACM', '-z'] if staged else [
+def scan_repo(root, staged=False, index_file=None):
+    env = dict(os.environ)
+    if index_file is not None: env['GIT_INDEX_FILE'] = str(index_file)
+    args = ['git', '-C', str(root), 'diff', '--cached', '--name-only', '--diff-filter=ACMRT', '--no-renames', '-z'] if staged else [
         'git', '-C', str(root), 'ls-files', '-z']
-    names = subprocess.check_output(args).decode('utf-8').split('\0')
+    names = subprocess.check_output(args, env=env).decode('utf-8').split('\0')
     findings = []
     for name in filter(None, names):
         reasons = ['private-path'] if private_path(name) else []
         if staged:
-            data = subprocess.check_output(['git', '-C', str(root), 'show', ':' + name])
+            data = subprocess.check_output(['git', '-C', str(root), 'show', ':' + name], env=env)
         else:
             path = root / name
             if not path.resolve().is_relative_to(root.resolve()) or path.is_symlink():

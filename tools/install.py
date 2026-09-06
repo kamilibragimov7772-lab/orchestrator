@@ -70,6 +70,17 @@ def atomic_write(path, data):
     finally:
         Path(tmp).unlink(missing_ok=True)
 
+def validate_parent_chain(path, root):
+    """Reject file or symlink parents before any installation write."""
+    current = path.parent
+    root = root.resolve()
+    while current != root:
+        if not current.resolve().is_relative_to(root):
+            raise ValueError('unsafe destination parent')
+        if current.exists() and (current.is_symlink() or not current.is_dir()):
+            raise ValueError('destination parent is not a directory: ' + str(current.relative_to(root)))
+        current = current.parent
+
 
 def install(destination, vault, mode='full', apply=False):
     destination, vault = Path(destination).resolve(), Path(vault).resolve()
@@ -121,6 +132,13 @@ def install(destination, vault, mode='full', apply=False):
             if parent.exists() and not parent.is_dir(): raise ValueError('vault parent is not a directory')
         if target.exists() and (target.is_dir() != (name in directories)):
             raise ValueError('vault file/directory collision')
+    # Complete preflight before the first write, including every target parent.
+    for path, _ in writes:
+        validate_parent_chain(path, destination)
+    for path in (settings, entry):
+        validate_parent_chain(path, destination)
+    for name in (*directories, *seeds):
+        validate_parent_chain(vault / name, vault)
     if apply:
         for path, data in writes: atomic_write(path, data)
         atomic_write(settings, (json.dumps(cfg, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))

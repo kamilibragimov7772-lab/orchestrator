@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -57,6 +58,34 @@ class SyncTests(unittest.TestCase):
         with self.assertRaisesRegex(sync_stack.SyncError, 'index is locked'):
             sync_stack.sync(self.repo)
         self.assertTrue(lock.exists())
+
+    def test_concurrent_git_client_cannot_stage_while_sync_owns_index_lock(self):
+        (self.repo / 'README.md').write_text('concurrent\n')
+        lock = self.repo / '.git/index.lock'
+        fd = os.open(lock, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        os.close(fd)
+        try:
+            client = subprocess.run(['git', '-C', str(self.repo), 'add', 'README.md'], capture_output=True)
+            self.assertNotEqual(client.returncode, 0)
+            with self.assertRaises(sync_stack.SyncError): sync_stack.sync(self.repo)
+            self.assertTrue(lock.exists())
+        finally:
+            lock.unlink()
+
+    def test_git_add_interleaving_is_rejected(self):
+        (self.repo / 'README.md').write_text('interleaved\n')
+        original = sync_stack.git
+        attempted = []
+        def wrapped(root, *args, **kwargs):
+            result = original(root, *args, **kwargs)
+            if args[:3] == ('diff', '--cached', '--quiet') and not attempted:
+                attempted.append(True)
+                client = subprocess.run(['git', '-C', str(self.repo), 'add', 'README.md'], capture_output=True)
+                self.assertNotEqual(client.returncode, 0)
+            return result
+        with mock.patch.object(sync_stack, 'git', side_effect=wrapped):
+            sync_stack.sync(self.repo)
+        self.assertEqual(self.git('show', 'HEAD:README.md'), 'interleaved')
 
     def test_sync_lock_blocks_second_caller(self):
         lock = self.repo / '.git/orchestrator-sync.lock'; lock.write_text('first process')

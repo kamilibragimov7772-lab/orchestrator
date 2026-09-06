@@ -9,6 +9,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import pre_commit
+import secret_scan
 from test_agent_lint import CARD
 
 
@@ -42,6 +43,14 @@ class PreCommitTests(unittest.TestCase):
     def test_staged_secret_is_rejected(self):
         self.card.write_text(CARD + '\nsk-' + 'proj-' + 'A' * 44, encoding='utf-8'); self.stage()
         self.assertEqual(pre_commit.check(self.root), 1)
+
+    def test_staged_rename_is_scanned(self):
+        old = self.root / 'template.txt'; old.write_text('template\n')
+        self.stage()
+        old.rename(self.root / 'settings.json')
+        subprocess.run(['git', '-C', str(self.root), 'add', '-A'], check=True, capture_output=True)
+        (self.root / 'settings.json').write_text('syntheticcredential sk-' + 'proj-' + 'A' * 44)
+        self.assertTrue(secret_scan.scan_repo(self.root, staged=True))
 
 
 if __name__ == '__main__':

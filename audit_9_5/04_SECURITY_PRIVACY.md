@@ -1,3 +1,5 @@
+> Исторический срез 8c7cbd8. Текущий статус публикации, независимого ревью и исправлений: [раунд 2](12_RELEASE_REVIEW_R2.md).
+
 # Security и privacy review
 
 Основные изменения: отказ от автоматического широкого sync/export, проверка staged и outgoing history, ограниченные пути экспорта, redacted diagnostics и checked outcomes. Подробная эксплуатационная граница — [SECURITY.md](../SECURITY.md).

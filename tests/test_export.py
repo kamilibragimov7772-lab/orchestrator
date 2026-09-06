@@ -50,6 +50,14 @@ class ExportTests(unittest.TestCase):
         self.assertEqual(first['destination'], second['destination'])
         self.assertEqual(len(list((self.vault / '_session_exports').iterdir())), 1)
 
+    def test_empty_transcript_preserves_previous_export(self):
+        first = export_session.export(self.event, 'redacted', self.vault, self.source)
+        previous = Path(first['destination']).read_text()
+        self.transcript.write_text('\n\n', encoding='utf-8')
+        with self.assertRaises(ValueError):
+            export_session.export(self.event, 'redacted', self.vault, self.source)
+        self.assertEqual(Path(first['destination']).read_text(), previous)
+
 
 if __name__ == '__main__':
     unittest.main()

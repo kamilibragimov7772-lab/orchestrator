@@ -1,3 +1,5 @@
+> Исторический срез 8c7cbd8. Текущий статус публикации, независимого ревью и исправлений: [раунд 2](12_RELEASE_REVIEW_R2.md).
+
 # Переносимость в Codex
 
 Локально обнаружен `codex-cli 0.153.4`; выполнены только --version/--help. Проверены актуальные официальные разделы [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents), [config reference](https://learn.chatgpt.com/docs/config-file/config-reference), [skills](https://learn.chatgpt.com/docs/build-skills). Документация обновляется быстрее репозитория; наличие CLI не доказывает совместимость данного стека.

@@ -9,6 +9,7 @@ import os
 from pathlib import Path, PurePosixPath
 import subprocess
 import sys
+import tempfile
 from secret_scan import detect, private_path, scan_repo
 
 
@@ -16,8 +17,9 @@ class SyncError(Exception):
     pass
 
 
-def git(root, *args, allowed=(0,)):
+def git(root, *args, allowed=(0,), index_file=None):
     env = dict(os.environ, GIT_TERMINAL_PROMPT='0')
+    if index_file is not None: env['GIT_INDEX_FILE'] = str(index_file)
     env.setdefault('GIT_SSH_COMMAND', 'ssh -o BatchMode=yes -o ConnectTimeout=10')
     p = subprocess.run(['git', '-C', str(root), *args], capture_output=True, env=env, timeout=45)
     if p.returncode not in allowed:
@@ -58,27 +60,54 @@ def sync(root, remote='origin', branch='main'):
         index_lock = Path(git(root, 'rev-parse', '--git-path', 'index.lock')[1])
         if not index_lock.is_absolute(): index_lock = root / index_lock
         if index_lock.exists(): raise SyncError('Git index is locked')
-        if any((gd / x).exists() for x in ('rebase-merge', 'rebase-apply', 'MERGE_HEAD', 'CHERRY_PICK_HEAD')):
-            raise SyncError('Git operation already in progress')
-        if git(root, 'branch', '--show-current')[1] != branch:
-            raise SyncError('unexpected branch')
-        if git(root, 'diff', '--cached', '--quiet', allowed=(0, 1))[0]:
-            raise SyncError('user has staged changes; index preserved')
-        allowed = manifest(root)
-        tracked = set(git(root, 'ls-files', '-z')[1].split('\0'))
-        selected = [n for n in allowed if (root / n).is_file() or n in tracked]
-        if not selected: raise SyncError('no permitted files')
-        for name in selected:
-            p = root / name
-            if p.is_file() and detect(p.read_text(encoding='utf-8', errors='replace')):
-                raise SyncError('credential pattern in allowlisted file; sync blocked')
-        git(root, 'add', '-A', '--', *[':(literal)' + n for n in selected])
-        staged = set(filter(None, git(root, 'diff', '--cached', '--name-only', '-z')[1].split('\0')))
-        if staged - set(allowed): raise SyncError('index changed concurrently; sync blocked')
-        if scan_repo(root, staged=True):
-            raise SyncError('credential or private path in staged snapshot; sync blocked')
-        committed = bool(staged)
-        if committed: git(root, 'commit', '-m', 'Sync explicitly allowlisted stack files')
+        # Own Git's real index lock before inspecting it. Git clients then fail
+        # closed instead of racing our later staging operation.
+        try:
+            lock_fd = os.open(index_lock, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        except FileExistsError:
+            raise SyncError('Git index is locked')
+        os.close(lock_fd)
+        index_owned = True
+        private_index = None
+        private_dir = None
+        try:
+            private_dir = Path(tempfile.mkdtemp(prefix='orchestr-index-', dir=str(gd)))
+            private_index = private_dir / 'index'
+            main_index = Path(git(root, 'rev-parse', '--git-path', 'index')[1])
+            if not main_index.is_absolute(): main_index = root / main_index
+            if main_index.exists(): private_index.write_bytes(main_index.read_bytes())
+            else: git(root, 'read-tree', '--empty', index_file=private_index)
+            # All index-mutating and staged-snapshot operations use the private index.
+            idx = lambda *a, allowed=(0,): git(root, *a, allowed=allowed, index_file=private_index)
+            if any((gd / x).exists() for x in ('rebase-merge', 'rebase-apply', 'MERGE_HEAD', 'CHERRY_PICK_HEAD')):
+                raise SyncError('Git operation already in progress')
+            if git(root, 'branch', '--show-current')[1] != branch:
+                raise SyncError('unexpected branch')
+            if idx('diff', '--cached', '--quiet', allowed=(0, 1))[0]:
+                raise SyncError('user has staged changes; index preserved')
+            allowed = manifest(root)
+            tracked = set(idx('ls-files', '-z')[1].split('\0'))
+            selected = [n for n in allowed if (root / n).is_file() or n in tracked]
+            if not selected: raise SyncError('no permitted files')
+            for name in selected:
+                p = root / name
+                if p.is_file() and detect(p.read_text(encoding='utf-8', errors='replace')):
+                    raise SyncError('credential pattern in allowlisted file; sync blocked')
+            idx('add', '-A', '--', *[':(literal)' + n for n in selected])
+            staged = set(filter(None, idx('diff', '--cached', '--name-only', '-z')[1].split('\0')))
+            if staged - set(allowed): raise SyncError('index changed concurrently; sync blocked')
+            if scan_repo(root, staged=True, index_file=private_index):
+                raise SyncError('credential or private path in staged snapshot; sync blocked')
+            committed = bool(staged)
+            if committed: idx('commit', '-m', 'Sync explicitly allowlisted stack files')
+            # Publish only our fully checked index while our lock is still owned.
+            os.replace(private_index, index_lock)
+            os.replace(index_lock, main_index)
+            index_owned = False
+        finally:
+            if private_index is not None: private_index.unlink(missing_ok=True)
+            if private_dir is not None: private_dir.rmdir()
+            if index_owned: index_lock.unlink(missing_ok=True)
         if git(root, 'diff', '--quiet', allowed=(0, 1))[0]:
             raise SyncError('unmanaged tracked changes; local commit kept, remote untouched')
         git(root, 'fetch', '--no-tags', remote, branch)

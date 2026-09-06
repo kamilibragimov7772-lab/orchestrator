@@ -29,7 +29,17 @@ def export(event, mode, vault, source_root):
     if not source.is_relative_to(root) or not source.is_file() or source.suffix != '.jsonl':
         raise ValueError('transcript must be a JSONL file within the configured source root')
     if source.stat().st_size > 25 * 1024 * 1024: raise ValueError('transcript exceeds 25 MiB budget')
-    records = [json.loads(line) for line in source.read_text(encoding='utf-8-sig').splitlines() if line.strip()]
+    lines = source.read_text(encoding='utf-8-sig').splitlines()
+    if not lines or not any(line.strip() for line in lines):
+        raise ValueError('transcript is empty')
+    records = []
+    for line in lines:
+        if not line.strip(): continue
+        item = json.loads(line)
+        if not isinstance(item, dict) or not item:
+            raise ValueError('transcript contains non-record')
+        records.append(item)
+    if not records: raise ValueError('transcript has no records')
     if mode == 'redacted': records = [redact(record) for record in records]
     content = '\n'.join(json.dumps(x, ensure_ascii=False) for x in records) + '\n'
     dest = Path(vault).resolve() / '_session_exports'

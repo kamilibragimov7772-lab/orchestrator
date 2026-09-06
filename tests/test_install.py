@@ -25,7 +25,7 @@ class InstallTests(unittest.TestCase):
         result = install.install(self.dest, self.vault, 'minimal', True)
         self.assertEqual(result['status'], 'installed')
         self.assertEqual(len(list((self.dest / 'agents').glob('*.md'))), 7)
-        self.assertIn(str(self.vault).replace('\\', '/'), (self.dest / 'CLAUDE.md').read_text())
+        self.assertIn(self.vault.resolve().as_posix(), (self.dest / 'CLAUDE.md').read_text(encoding='utf-8'))
         self.assertEqual(install.install(self.dest, self.vault, 'minimal', True)['new_files'], 0)
 
     def test_existing_card_collision_leaves_target_unchanged(self):
@@ -60,6 +60,13 @@ class InstallTests(unittest.TestCase):
         with self.assertRaises((ValueError, OSError)):
             install.install(self.dest, self.vault, apply=True)
         self.assertFalse(self.dest.exists())
+
+    def test_file_parent_is_rejected_before_any_stack_write(self):
+        self.dest.mkdir()
+        (self.dest / 'tools').write_text('user file')
+        with self.assertRaises(ValueError):
+            install.install(self.dest, self.vault, apply=True)
+        self.assertFalse((self.dest / 'agents').exists())
 
 
 if __name__ == '__main__':

@@ -18,6 +18,8 @@ python tools/verify.py
 python tools/install.py --destination /absolute/path/stack --vault /absolute/path/vault --mode minimal
 ```
 
+`minimal` рассчитан на исследования и Markdown-документы: семь ролей, без software/site/media pipeline. Перед запуском проверьте наличие требуемых ролей; расширенные сценарии требуют `full` и их внешних зависимостей.
+
 Добавьте `--apply`, чтобы применить этот план. Конфликтующие файлы сохраняются, установка останавливается. Настройка Claude Code и Windows-команды — [INSTALL.md](INSTALL.md).
 
 ## Состав и границы

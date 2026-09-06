@@ -30,12 +30,30 @@ def inspect(root, installed=False):
         settings = root / 'settings.json'
         try:
             cfg = json.loads(settings.read_text(encoding='utf-8-sig'))
-            handlers = [h for item in cfg.get('hooks', {}).get('PreToolUse', []) for h in item.get('hooks', [])]
+            handlers = [(item.get('matcher', ''), h) for item in cfg.get('hooks', {}).get('PreToolUse', []) for h in item.get('hooks', [])]
             expected = root / 'tools/guard.py'
+            guard_ok = expected.is_file() and not expected.is_symlink()
+            interpreter_ok = bool(shutil.which(sys.executable))
             for kind in ('secret', 'risk'):
-                wired = any(h.get('type') == 'command' and h.get('args') == [str(expected), kind]
-                            and bool(shutil.which(h.get('command', ''))) for h in handlers)
-                add(kind + '-guard-wiring', True, 'pass' if wired else 'fail', 'exec-form path and interpreter')
+                wanted = 'Write|Edit|Bash|PowerShell' if kind == 'secret' else 'Bash|PowerShell'
+                wired = any(matcher == wanted and h.get('type') == 'command' and h.get('args') == [str(expected), kind]
+                            and h.get('command') == sys.executable for matcher, h in handlers)
+                add(kind + '-guard-wiring', True, 'pass' if (guard_ok and interpreter_ok and wired) else 'fail', 'guard file, interpreter and exact matcher')
+            smoke_ok = False; smoke_detail = 'portable hook execution'
+            if guard_ok:
+                benign = json.dumps({'tool_name': 'Write', 'tool_input': {'content': 'syntheticpayload'}}).encode()
+                secret = json.dumps({'tool_name': 'Write', 'tool_input': {'content': 'sk-' + 'proj-' + 'A' * 44}}).encode()
+                risky = json.dumps({'tool_name': 'Bash', 'tool_input': {'command': 'git push --force origin main'}}).encode()
+                try:
+                    p1 = subprocess.run([sys.executable, str(expected), 'secret'], input=benign, capture_output=True, timeout=10)
+                    p2 = subprocess.run([sys.executable, str(expected), 'secret'], input=secret, capture_output=True, timeout=10)
+                    p3 = subprocess.run([sys.executable, str(expected), 'risk'], input=risky, capture_output=True, timeout=10)
+                except subprocess.TimeoutExpired:
+                    smoke_detail = 'guard smoke timed out'
+                    p1 = p2 = p3 = None
+                smoke_ok = bool(p1 and p2 and p3 and p1.returncode == 0 and p2.returncode == 2 and p3.returncode == 2)
+                if not smoke_ok and p1 is not None: smoke_detail = 'unexpected guard exit code'
+            add('guard-smoke', True, 'pass' if smoke_ok else 'fail', smoke_detail)
             vault = Path(cfg.get('env', {}).get('VAULT_ROOT', ''))
             add('vault', True, 'pass' if (vault / '_orchestr/_ACTIVE').is_dir() else 'fail', 'run directory exists')
         except (OSError, ValueError, TypeError): add('settings', True, 'fail', 'settings absent or invalid')

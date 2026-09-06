@@ -175,3 +175,5 @@ tools/silero-tts/README.md
 tools/silero-tts/gen.py
 tools/sync_stack.py
 tools/verify.py
+audit_9_5/12_RELEASE_REVIEW_R2.md
+tests/test_doctor.py
