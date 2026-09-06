@@ -103,12 +103,12 @@ test_malformed_settings_fail_preflight (test_install.InstallTests.test_malformed
 test_paths_are_exec_arguments_without_shell (test_install.InstallTests.test_paths_are_exec_arguments_without_shell) ... ok
 test_settings_merge_preserves_permissions_and_hooks (test_install.InstallTests.test_settings_merge_preserves_permissions_and_hooks) ... ok
 test_vault_collision_is_found_before_stack_writes (test_install.InstallTests.test_vault_collision_is_found_before_stack_writes) ... ok
-test_good_index_passes (test_pre_commit.PreCommitTests.test_good_index_passes) ... 
+test_good_index_passes (test_pre_commit.PreCommitTests.test_good_index_passes) ...
 ==============================================================
 проверено файлов: 4 | ОШИБОК: 0 | предупреждений: 1
 ok
 test_staged_secret_is_rejected (test_pre_commit.PreCommitTests.test_staged_secret_is_rejected) ... ok
-test_unstaged_fix_cannot_hide_broken_index (test_pre_commit.PreCommitTests.test_unstaged_fix_cannot_hide_broken_index) ... 
+test_unstaged_fix_cannot_hide_broken_index (test_pre_commit.PreCommitTests.test_unstaged_fix_cannot_hide_broken_index) ...
 sample.md
    ОШИБКА  нужен Bash (обязанность: 'посчитай'), но во frontmatter его нет
 
