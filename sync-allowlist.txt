@@ -10,6 +10,7 @@ CONTRIBUTING.md
 EVAL_PROMPT.md
 INSTALL.md
 LICENSE
+README.en.md
 README.md
 SECURITY.md
 _ECC_inspirations.md
