@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Portable PreToolUse guards. Heuristics complement native host permissions.
 
 Malformed input fails closed and diagnostics never include the original payload.

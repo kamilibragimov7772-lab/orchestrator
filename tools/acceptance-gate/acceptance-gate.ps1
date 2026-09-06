@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 # Report-only worker; configure async at the HOST, never with Start-Job.
 $ErrorActionPreference = 'Stop'
 try {

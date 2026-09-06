@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Opt-in bridge. Exact-file allowlist, exclusive lock and checked Git outcomes.
 
 Diverged branches require manual reconciliation. No autostash, reset or force push.

@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Heuristic credential scanner. Independent Gitleaks history scan runs in CI.
 
 Only pattern types and paths are reported; matching values never leave this module.

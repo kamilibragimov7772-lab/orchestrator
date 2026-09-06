@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 # Shared ASCII wrapper; payload stays on stdin. No persistent logs containing commands.
 param([Parameter(Mandatory=$true)][ValidateSet('secret','risk')][string]$Kind)
 $ErrorActionPreference = 'Stop'

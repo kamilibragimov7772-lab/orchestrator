@@ -1,12 +1,12 @@
 # Orchestrator — a verifiable orchestration stack for Claude Code
 
-**[English](README.en.md) · [Русский](README.md)**
+**[English](README.en.md) · [Русский](README.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [हिन्दी](README.hi.md) · [العربية](README.ar.md) · [Türkçe](README.tr.md)**
 
 Turn one Claude Code session into an orchestrator: a brief becomes a wave plan, waves run
 specialized subagents, every wave lands as a file, and a separate reviewer accepts or rejects
 the result. 41 agent cards, 10 shared contracts, 10 slash commands, 4 optional skills.
 
-MIT licensed. Author: **@kamil_ibrgmv**. Protocol version **2.16.0**.
+MIT licensed. Author: **[@kamil_ibrgmv](https://instagram.com/kamil_ibrgmv)**. Protocol version **2.16.0**.
 
 > **Read this first — language.** The orchestration protocol, the agent cards and the
 > acceptance criteria are written **in Russian**. The tooling, tests, install path and code
@@ -151,4 +151,4 @@ to select risks, not as a certificate of compliance.
 
 ## License
 
-[MIT](LICENSE).
+[MIT](LICENSE). Author: **[@kamil_ibrgmv](https://instagram.com/kamil_ibrgmv)**.

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 from video_config import required_dir, output_file, clip_files, validate_edl, scratch
 # Extract the EDL (list of {clip, dur_seconds, covers_text}) from an agent's JSON answer
 # and save it as <VIDEO_WORK>/edl.json for the build_edit*.py / gen_remotion_data.py scripts.

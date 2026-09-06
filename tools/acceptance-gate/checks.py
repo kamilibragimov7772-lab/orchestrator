@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """
 Детерминированное ядро приёмки. Часть «босса» — того, что принимает работу
 после оркестратора.

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """gotovo-counter — считает, в скольких прогонах образ готового реально фиксировался.
 
 Зачем. Правило «Образ готового» (Шаг 2.5в brief-architect + референс-гейт P0-13, введено

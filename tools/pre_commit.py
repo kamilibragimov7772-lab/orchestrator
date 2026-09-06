@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 """Validate the staged snapshot, never an unrelated home or unstaged fix."""
 import os
 from pathlib import Path

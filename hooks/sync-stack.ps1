@@ -1,3 +1,4 @@
+# Orchestrator stack for Claude Code. Author: @kamil_ibrgmv - https://instagram.com/kamil_ibrgmv
 # Opt-in bridge. ASCII-only wrapper for PowerShell 5.1 and 7.
 $ErrorActionPreference = 'Stop'
 if ($env:ORCHESTRATOR_SYNC_ENABLED -ne '1') {

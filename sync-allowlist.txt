@@ -10,8 +10,18 @@ CONTRIBUTING.md
 EVAL_PROMPT.md
 INSTALL.md
 LICENSE
+README.ar.md
+README.de.md
 README.en.md
+README.es.md
+README.fr.md
+README.hi.md
+README.ja.md
+README.ko.md
 README.md
+README.pt-BR.md
+README.tr.md
+README.zh-CN.md
 SECURITY.md
 _ECC_inspirations.md
 _gotovo_canon.md
@@ -85,6 +95,7 @@ audit_9_5/08_CODEX_PORTABILITY.md
 audit_9_5/09_ROADMAP_TO_9_5.md
 audit_9_5/10_PATCH_PLAN.md
 audit_9_5/11_FINAL_SCORECARD.md
+audit_9_5/12_RELEASE_REVIEW_R2.md
 audit_9_5/evidence/acceptance-launch-final.txt
 audit_9_5/evidence/agent-lint.txt
 audit_9_5/evidence/agent-selftest.txt
@@ -148,6 +159,7 @@ sync-allowlist.txt
 tests/test_acceptance.py
 tests/test_acceptance_launch.py
 tests/test_agent_lint.py
+tests/test_doctor.py
 tests/test_export.py
 tests/test_guards.py
 tests/test_helpers.py
@@ -176,5 +188,3 @@ tools/silero-tts/README.md
 tools/silero-tts/gen.py
 tools/sync_stack.py
 tools/verify.py
-audit_9_5/12_RELEASE_REVIEW_R2.md
-tests/test_doctor.py
