@@ -98,6 +98,15 @@ SYMBOL_RES = {
 SYMBOL_RES["js"] = SYMBOL_RES["ts"]
 
 
+def write_raw(path, text):
+    """Write and CLOSE. The bare `open(...).write(...)` form leaks the handle
+    until garbage collection, which surfaces as ResourceWarning in the test run
+    and, on Windows, can leave the file locked for the next step of the same
+    inventory."""
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(text)
+
+
 def run(cmd, cwd=None, timeout=900, env=None):
     """Запускает команду, возвращает (rc, stdout, stderr). Не падает."""
     try:
@@ -292,7 +301,7 @@ def tool_ruff(root, outdir):
         items = json.loads(out)
     except Exception:
         return {"error": "parse"}
-    open(os.path.join(outdir, "raw", "ruff.json"), "w", encoding="utf-8").write(out or "[]")
+    write_raw(os.path.join(outdir, "raw", "ruff.json"), out or "[]")
     codes = Counter(i.get("code") or "?" for i in items)
     fixable = sum(1 for i in items if i.get("fix"))
     return {"total": len(items), "fixable": fixable, "by_code": codes.most_common(25)}
@@ -306,7 +315,7 @@ def tool_vulture(root, outdir):
                      timeout=600)
     if rc not in (0, 3):
         return {"error": f"vulture exited {rc}; result not accepted"}
-    open(os.path.join(outdir, "raw", "vulture.txt"), "w", encoding="utf-8").write(out or "")
+    write_raw(os.path.join(outdir, "raw", "vulture.txt"), out or "")
     lines = [ln.replace(root + "/", "") for ln in (out or "").splitlines() if ln.strip()]
     src = [ln for ln in lines if not TEST_RE.search(ln.split(":")[0])]
     return {"total": len(lines), "in_src": len(src), "sample": src[:40] or lines[:40]}
@@ -327,7 +336,7 @@ def tool_knip(root, outdir):
         data = json.loads(body[start:])
     except Exception:
         return {"error": "parse"}
-    open(os.path.join(outdir, "raw", "knip.json"), "w", encoding="utf-8").write(json.dumps(data)[:2_000_000])
+    write_raw(os.path.join(outdir, "raw", "knip.json"), json.dumps(data)[:2_000_000])
     files = data.get("files", [])
     issues = data.get("issues", [])
     agg = Counter()
@@ -350,7 +359,7 @@ def tool_radon(root, outdir, langs):
         data = json.loads(out)
     except Exception:
         return {"error": "parse"}
-    open(os.path.join(outdir, "raw", "radon_cc.json"), "w", encoding="utf-8").write(out or "{}")
+    write_raw(os.path.join(outdir, "raw", "radon_cc.json"), out or "{}")
     worst = []
     for f, items in data.items():
         if not isinstance(items, list):
@@ -382,7 +391,7 @@ def tool_git_churn(root, outdir):
                 churn[f] += int(a) + int(d)
         else:
             commits += 1
-    open(os.path.join(outdir, "raw", "git_churn.tsv"), "w", encoding="utf-8").write(
+    write_raw(os.path.join(outdir, "raw", "git_churn.tsv"), 
         "\n".join(f"{v}\t{k}" for k, v in churn.most_common())
     )
     return {"commits_12m": commits, "top": churn.most_common(30)}
@@ -675,7 +684,7 @@ def main():
 
     print("[5/5] карта …", file=sys.stderr)
     mp = build_map(root, entries, symbols, dup_symbols, todos, findings, outdir, time.time() - t0)
-    open(os.path.join(outdir, "00_MAP.md"), "w", encoding="utf-8").write(mp)
+    write_raw(os.path.join(outdir, "00_MAP.md"), mp)
 
     sizes = {f: os.path.getsize(os.path.join(outdir, f))
              for f in ("00_MAP.md", "01_symbols.tsv", "02_findings.json",
